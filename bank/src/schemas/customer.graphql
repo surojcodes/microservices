@@ -1,0 +1,6 @@
+type Customer {
+  customerId: String
+  name: String
+  email: String
+  accounts: [Account!]!
+}

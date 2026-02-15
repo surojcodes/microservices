@@ -1,0 +1,6 @@
+type Account {
+  accountNumber: String
+  type: String
+  balance: Float
+  customer: Customer
+}

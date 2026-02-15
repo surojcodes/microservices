@@ -2,10 +2,9 @@
   "name": "bank",
   "version": "1.0.0",
   "description": "Bank Public GraphQL API",
-  "main": "index.js",
-  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
-    "compile": "tsc",
+    "compile": "tsc && cp src/schemas/*.graphql dist/schemas",
     "start": "npm run compile && node ./dist/index.js"
   },
   "keywords": [],
@@ -18,6 +17,9 @@
   "dependencies": {
     "@apollo/server": "^5.4.0",
     "@as-integrations/express5": "^1.1.2",
+    "@graphql-tools/load-files": "^7.0.1",
+    "@graphql-tools/merge": "^9.1.7",
+    "@graphql-tools/schema": "^10.0.31",
     "@types/express": "^5.0.6",
     "express": "^5.2.1",
     "graphql": "^16.12.0"

@@ -1,25 +1,17 @@
+import express from "express";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
-import express from "express";
+import typeDefs from "./schemas/schema";
+import resolvers from "./resolvers/resolvers";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 
 const app = express();
 const PORT = 4000;
 
-const typeDefs = `#graphql 
-type Query{
-  account:String
-}
-`;
-
-const resolvers = {
-  Query: {
-    account: () => "Accounts",
-  },
-};
+const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 const apolloServer = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema,
 });
 
 async function startExpressServer() {
