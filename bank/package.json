@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "compile": "tsc && cp src/schemas/*.graphql dist/schemas",
+    "gen": " npx graphql-codegen --config src/codegen.ts",
     "start": "npm run compile && node ./dist/index.js"
   },
   "keywords": [],
@@ -17,6 +18,7 @@
   "dependencies": {
     "@apollo/server": "^5.4.0",
     "@as-integrations/express5": "^1.1.2",
+    "@graphql-codegen/cli": "^6.1.1",
     "@graphql-tools/load-files": "^7.0.1",
     "@graphql-tools/merge": "^9.1.7",
     "@graphql-tools/schema": "^10.0.31",
