@@ -1,5 +1,9 @@
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import { expressMiddleware } from "@as-integrations/express5";
+import express from "express";
+
+const app = express();
+const PORT = 4000;
 
 const typeDefs = `#graphql 
 type Query{
@@ -13,11 +17,20 @@ const resolvers = {
   },
 };
 
-const server = new ApolloServer({
+const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
 });
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-});
-console.log(`🚀  Server ready at: ${url}`);
+
+async function startExpressServer() {
+  await apolloServer.start();
+  app.use("/graphql", express.json(), expressMiddleware(apolloServer));
+  app.listen(PORT, () => {
+    console.log(`
+      Express Server running at localhost:${PORT}
+      Graphql Server running at localhost:${PORT}/graphql
+      `);
+  });
+}
+
+startExpressServer();

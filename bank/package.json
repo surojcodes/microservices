@@ -17,6 +17,9 @@
   },
   "dependencies": {
     "@apollo/server": "^5.4.0",
+    "@as-integrations/express5": "^1.1.2",
+    "@types/express": "^5.0.6",
+    "express": "^5.2.1",
     "graphql": "^16.12.0"
   }
 }
