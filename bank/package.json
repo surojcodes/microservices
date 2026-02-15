@@ -1,0 +1,22 @@
+{
+  "name": "bank",
+  "version": "1.0.0",
+  "description": "Bank Public GraphQL API",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js"
+  },
+  "keywords": [],
+  "author": "surojcodes@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^25.2.3",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@apollo/server": "^5.4.0",
+    "graphql": "^16.12.0"
+  }
+}
