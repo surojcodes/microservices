@@ -44,7 +44,7 @@ app.get(
         data: {
           id: customer.customer_id,
           name: customer.name,
-          email: customer.name,
+          email: customer.email,
         },
       });
   },
