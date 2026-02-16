@@ -67,7 +67,17 @@ app.get("/accounts/customers/:customerId", (req, res) => {
   const customerAccounts = accounts.filter(
     (account) => account.customer_id === customerId,
   );
-  res.json(customerAccounts);
+  res.status(200).json({
+    success: true,
+    data: customerAccounts.map((account) => {
+      return {
+        accountNumber: account.account_number,
+        customerId: account.customer_id,
+        balance: account.balance,
+        type: account.type,
+      };
+    }),
+  });
 });
 
 app.listen(PORT, () => {
