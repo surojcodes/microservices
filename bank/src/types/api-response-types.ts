@@ -1,3 +1,5 @@
+import { Account } from "../generated/generated-types";
+
 export interface AccountDto {
   accountNumber: string;
   customerId: string;
@@ -18,4 +20,7 @@ export interface CustomerAPIRes {
   success: boolean;
   data?: CustomerDto | CustomerDto[];
   message?: string;
+}
+export interface AccountInternal extends Account {
+  customerId: string;
 }
