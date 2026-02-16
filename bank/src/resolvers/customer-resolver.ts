@@ -1,10 +1,19 @@
 import axios from "axios";
-import { Customer, QueryCustomerArgs } from "../generated/generated-types";
-import { CustomerAPIRes, CustomerDto } from "../types/api-response-types";
+import {
+  Customer as BankCustomer,
+  QueryCustomerArgs,
+} from "../generated/generated-types";
+import {
+  AccountAPIRes,
+  AccountDto,
+  AccountInternal,
+  CustomerAPIRes,
+  CustomerDto,
+} from "../types/api-response-types";
 import { URLS } from "../config";
-import { customerMapper } from "../mappers/mapper";
+import { accountMapper, customerMapper } from "../mappers/mapper";
 
-const customers = async (): Promise<Customer[]> => {
+const customers = async (): Promise<BankCustomer[]> => {
   try {
     const { data: customersResponse } = await axios.get<CustomerAPIRes>(
       URLS.CUSTOMERS_API_URL,
@@ -32,8 +41,27 @@ const customer = async (_: never, args: QueryCustomerArgs) => {
     throw new Error("Unable to fetch customer :: " + ex.message);
   }
 };
+const accounts = async (customer: BankCustomer): Promise<AccountInternal[]> => {
+  try {
+    const { data: accountsResponse } = await axios.get<AccountAPIRes>(
+      `${URLS.ACCOUNTS_API_URL}/customers/${customer.customerId}`,
+    );
+    if (accountsResponse.success) {
+      const accounts = accountsResponse.data as AccountDto[];
+      return accounts.map((account) => accountMapper(account));
+    } else {
+      throw new Error();
+    }
+  } catch (ex) {
+    throw new Error("Unable to fetch accounts :: " + ex.message);
+  }
+};
 
 export const CustomerQuery = {
   customers,
   customer,
+};
+
+export const Customer = {
+  accounts,
 };
