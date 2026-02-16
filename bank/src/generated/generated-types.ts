@@ -40,10 +40,10 @@ export type Query = {
 
 
 export type QueryAccountArgs = {
-  id?: InputMaybe<Scalars['String']['input']>;
+  accountNumber?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryCustomerArgs = {
-  id?: InputMaybe<Scalars['String']['input']>;
+  customerId?: InputMaybe<Scalars['String']['input']>;
 };
