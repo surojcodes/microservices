@@ -7,7 +7,7 @@ import { accountMapper } from "../mappers/mapper";
 const accounts = async (): Promise<Account[]> => {
   try {
     const { data: accountsResponse } = await axios.get<AccountAPIRes>(
-      `${URLS.ACCOUNTS_API_URL}/accounts`,
+      URLS.ACCOUNTS_API_URL,
     );
     if (accountsResponse.success) {
       const accounts = accountsResponse.data as AccountDto[];
@@ -25,7 +25,7 @@ const account = async (
 ): Promise<Account | undefined> => {
   try {
     const accountResponse = await axios.get<AccountAPIRes>(
-      `${URLS.ACCOUNTS_API_URL}/accounts/${args.accountNumber}`,
+      `${URLS.ACCOUNTS_API_URL}/${args.accountNumber}`,
     );
     if (accountResponse.status === 404 || !accountResponse.data.success)
       throw new Error();

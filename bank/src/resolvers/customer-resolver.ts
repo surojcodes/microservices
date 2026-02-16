@@ -7,7 +7,7 @@ import { customerMapper } from "../mappers/mapper";
 const customers = async (): Promise<Customer[]> => {
   try {
     const { data: customersResponse } = await axios.get<CustomerAPIRes>(
-      `${URLS.CUSTOMERS_API_URL}/customers`,
+      URLS.CUSTOMERS_API_URL,
     );
     if (customersResponse.success) {
       const customers = customersResponse.data as CustomerDto[];
@@ -22,7 +22,7 @@ const customers = async (): Promise<Customer[]> => {
 const customer = async (_: never, args: QueryCustomerArgs) => {
   try {
     const customerResponse = await axios.get<CustomerAPIRes>(
-      `${URLS.CUSTOMERS_API_URL}/customers/${args.customerId}`,
+      `${URLS.CUSTOMERS_API_URL}/${args.customerId}`,
     );
     if (customerResponse.status === 404 || !customerResponse.data.success)
       throw new Error();
