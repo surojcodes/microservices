@@ -23,7 +23,7 @@ app.get("/customers", (req: Request<never, CustomerAPIRes>, res) => {
       return {
         id: customer.customer_id,
         name: customer.name,
-        email: customer.name,
+        email: customer.email,
       };
     }),
   });
