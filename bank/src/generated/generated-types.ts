@@ -24,7 +24,7 @@ export type Account = {
 
 export type Customer = {
   __typename?: 'Customer';
-  accounts: Array<Account>;
+  accounts?: Maybe<Array<Account>>;
   customerId?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;

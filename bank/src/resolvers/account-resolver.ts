@@ -2,7 +2,7 @@ import { URLS } from "../config";
 import { Account, QueryAccountArgs } from "../generated/generated-types";
 import axios from "axios";
 import { AccountAPIRes, AccountDto } from "../types/api-response-types";
-import { accountsMapper } from "../mappers/account-mapper";
+import { accountMapper } from "../mappers/mapper";
 
 const accounts = async (): Promise<Account[]> => {
   try {
@@ -11,7 +11,7 @@ const accounts = async (): Promise<Account[]> => {
     );
     if (accountsResponse.success) {
       const accounts = accountsResponse.data as AccountDto[];
-      return accounts.map((account) => accountsMapper(account));
+      return accounts.map((account) => accountMapper(account));
     } else {
       throw new Error();
     }
@@ -30,7 +30,7 @@ const account = async (
     if (accountResponse.status === 404 || !accountResponse.data.success)
       throw new Error();
     const account = accountResponse.data;
-    return accountsMapper(account.data as AccountDto);
+    return accountMapper(account.data as AccountDto);
   } catch (ex) {
     throw new Error("Unable to fetch account :: " + ex.message);
   }

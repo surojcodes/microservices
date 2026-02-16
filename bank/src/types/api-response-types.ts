@@ -9,3 +9,13 @@ export interface AccountAPIRes {
   data?: AccountDto | AccountDto[];
   message?: string;
 }
+export interface CustomerDto {
+  id: string;
+  name: string;
+  email: string;
+}
+export interface CustomerAPIRes {
+  success: boolean;
+  data?: CustomerDto | CustomerDto[];
+  message?: string;
+}
