@@ -16,20 +16,24 @@ const accounts = async (): Promise<Account[]> => {
       throw new Error();
     }
   } catch (ex) {
-    throw new Error("Unable to fetch accounts");
+    throw new Error("Unable to fetch accounts :: " + ex.message);
   }
 };
 const account = async (
   _: never,
   args: QueryAccountArgs,
 ): Promise<Account | undefined> => {
-  const accountResponse = await axios.get<AccountAPIRes>(
-    `${URLS.ACCOUNTS_API_URL}/accounts/${args.accountNumber}`,
-  );
-  console.log(accountResponse.data);
-  if (accountResponse.status === 404) return;
-  const account = accountResponse.data;
-  return accountsMapper(account.data as AccountDto);
+  try {
+    const accountResponse = await axios.get<AccountAPIRes>(
+      `${URLS.ACCOUNTS_API_URL}/accounts/${args.accountNumber}`,
+    );
+    if (accountResponse.status === 404 || !accountResponse.data.success)
+      throw new Error();
+    const account = accountResponse.data;
+    return accountsMapper(account.data as AccountDto);
+  } catch (ex) {
+    throw new Error("Unable to fetch account :: " + ex.message);
+  }
 };
 export const AccountQuery = {
   accounts,
