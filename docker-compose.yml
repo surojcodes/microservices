@@ -3,20 +3,26 @@ services:
     build: ./accounts
     image: account:1.0.0
     container_name: account
+    environment:
+      PORT: 3001 #inject this env var in account container
     ports:
-      - "3001:3001"
+      - "${ACCOUNT_HOST_PORT}:3001"
   customer:
     build: ./customer
     image: customer:1.0.0
     container_name: customer
+    environment:
+      PORT: 3000
     ports:
-      - "3000:3000"
+      - "${CUSTOMER_HOST_PORT}:3000"
   bank:
     build: ./bank
     image: bank:1.0.0
     container_name: bank
+    environment:
+      PORT: 4000
     ports:
-      - "4000:4000"
+      - "${BANK_HOST_PORT}:4000"
     depends_on:
       - account
       - customer

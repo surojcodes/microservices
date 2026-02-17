@@ -4,10 +4,12 @@ import { expressMiddleware } from "@as-integrations/express5";
 import typeDefs from "./schemas/schema";
 import resolvers from "./resolvers/resolvers";
 import { makeExecutableSchema } from "@graphql-tools/schema";
+import { configDotenv } from "dotenv";
 
 const app = express();
-const PORT = 4000;
 
+configDotenv();
+const PORT = process.env.PORT;
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 const apolloServer = new ApolloServer({

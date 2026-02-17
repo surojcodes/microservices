@@ -1,7 +1,9 @@
 import express, { Request } from "express";
 import data from "./accounts.json";
+import { configDotenv } from "dotenv";
 
-const PORT = 3001;
+configDotenv();
+const PORT = process.env.PORT;
 const app = express();
 
 interface AccountDto {

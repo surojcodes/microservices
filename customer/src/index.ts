@@ -1,8 +1,12 @@
 import express, { Request } from "express";
 import data from "./customers.json";
 
-const PORT = 3000;
+import { configDotenv } from "dotenv";
+
 const app = express();
+
+configDotenv();
+const PORT = process.env.PORT;
 
 interface CustomerDto {
   id: string;
