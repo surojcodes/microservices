@@ -1,0 +1,22 @@
+services:
+  account:
+    build: ./accounts
+    image: account:1.0.0
+    container_name: account
+    ports:
+      - "3001:3001"
+  customer:
+    build: ./customer
+    image: customer:1.0.0
+    container_name: customer
+    ports:
+      - "3000:3000"
+  bank:
+    build: ./bank
+    image: bank:1.0.0
+    container_name: bank
+    ports:
+      - "4000:4000"
+    depends_on:
+      - account
+      - customer
