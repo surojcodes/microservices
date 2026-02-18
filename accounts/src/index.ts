@@ -15,15 +15,15 @@ app.use(express.json());
 
 //GET all accounts
 app.get("/accounts", (req: Request<never, AccountAPIRes>, res) => {
-  const accounts = data.accounts;
+  const accounts = data.accounts as AccountEntity[];
   res.status(200).json({
     success: true,
-    data: accounts.map((account) => {
+    data: accounts.map((account: AccountEntity) => {
       return {
         accountNumber: account.account_number,
         customerId: account.customer_id,
         balance: account.balance,
-        type: account.type,
+        accountType: account.accountType,
       };
     }),
   });
@@ -34,7 +34,7 @@ app.get(
   "/accounts/:accountId",
   (req: Request<{ accountId: String }, AccountAPIRes>, res) => {
     const { accountId } = req.params;
-    const accounts = data.accounts;
+    const accounts = data.accounts as AccountEntity[];
     const account = accounts.find(
       (account) => account.account_number === accountId,
     );
@@ -50,7 +50,7 @@ app.get(
           accountNumber: account.account_number,
           customerId: account.customer_id,
           balance: account.balance,
-          type: account.type,
+          accountType: account.accountType,
         },
       });
   },
@@ -59,7 +59,7 @@ app.get(
 //GET Accounts of a customer
 app.get("/accounts/customers/:customerId", (req, res) => {
   const { customerId } = req.params;
-  const accounts = data.accounts;
+  const accounts = data.accounts as AccountEntity[];
   const customerAccounts = accounts.filter(
     (account) => account.customer_id === customerId,
   );
@@ -70,7 +70,7 @@ app.get("/accounts/customers/:customerId", (req, res) => {
         accountNumber: account.account_number,
         customerId: account.customer_id,
         balance: account.balance,
-        type: account.type,
+        accountType: account.accountType,
       };
     }),
   });
@@ -81,7 +81,7 @@ app.post(
   "/accounts",
   (req: Request<never, AccountAPIRes, CreateAccountDto>, res) => {
     const reqBody = req.body;
-    if (!reqBody.type || !reqBody.customerId) {
+    if (!reqBody.accountType || !reqBody.customerId) {
       res.status(400).json({
         success: false,
         message: "Customer ID and account type are required",
@@ -90,9 +90,9 @@ app.post(
     const accounts = data.accounts as AccountEntity[];
     const newAccount: AccountEntity = {
       customer_id: reqBody.customerId,
-      type: reqBody.type,
+      accountType: reqBody.accountType,
       balance: reqBody.balance ?? 0,
-      account_number: generateAccountNumber(reqBody.type, accounts),
+      account_number: generateAccountNumber(reqBody.accountType, accounts),
     };
     accounts.push(newAccount);
     res.status(201).json({
@@ -101,7 +101,7 @@ app.post(
         accountNumber: newAccount.account_number,
         balance: newAccount.balance,
         customerId: newAccount.customer_id,
-        type: newAccount.type,
+        accountType: newAccount.accountType,
       },
     });
   },

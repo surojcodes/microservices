@@ -3,25 +3,25 @@
     {
       "account_number": "SA0001",
       "customer_id": "1",
-      "type": "SAVING",
+      "accountType": "SAVING",
       "balance": 21000.9
     },
     {
       "account_number": "CA0001",
       "customer_id": "1",
-      "type": "CHECKING",
+      "accountType": "CHECKING",
       "balance": 21.89
     },
     {
       "account_number": "CA0002",
       "customer_id": "2",
-      "type": "CHECKING",
+      "accountType": "CHECKING",
       "balance": 11889.75
     },
     {
       "account_number": "SA0003",
       "customer_id": "3",
-      "type": "SAVINGS",
+      "accountType": "SAVINGS",
       "balance": 12033.99
     }
   ]
