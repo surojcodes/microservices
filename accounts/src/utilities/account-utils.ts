@@ -1,10 +1,23 @@
 import { AccountEntity, AccountType } from "../models/account-model";
 
 export const generateAccountNumber = (
-  accountType: string,
+  accountType: AccountType,
   accounts: AccountEntity[],
 ): string => {
-  return "apple";
+  const checkingCount = accounts.filter(
+    (account) => account.accountType === AccountType.CHECKING,
+  ).length;
+  const savingsCount = accounts.filter(
+    (account) => account.accountType === AccountType.SAVINGS,
+  ).length;
+  switch (accountType) {
+    case AccountType.CHECKING:
+      return `CH_${checkingCount + 1}`;
+    case AccountType.SAVINGS:
+      return `SA_${savingsCount + 1}`;
+    default:
+      throw new Error("Invalid account type");
+  }
 };
 
 export const isValidAccountType = (accountType: any) => {

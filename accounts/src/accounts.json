@@ -1,25 +1,25 @@
 {
   "accounts": [
     {
-      "account_number": "SA0001",
+      "account_number": "SA_1",
       "customer_id": "1",
       "accountType": "SAVINGS",
       "balance": 21000.9
     },
     {
-      "account_number": "CA0001",
+      "account_number": "CH_1",
       "customer_id": "1",
       "accountType": "CHECKING",
       "balance": 21.89
     },
     {
-      "account_number": "CA0002",
+      "account_number": "CH_2",
       "customer_id": "2",
       "accountType": "CHECKING",
       "balance": 11889.75
     },
     {
-      "account_number": "SA0003",
+      "account_number": "SA_2",
       "customer_id": "3",
       "accountType": "SAVINGS",
       "balance": 12033.99
