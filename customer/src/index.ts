@@ -33,19 +33,19 @@ app.get(
     const { id } = req.params;
     const customers = data.customers;
     const customer = customers.find((customer) => customer.customer_id === id);
-    if (!customer)
-      res
+    if (!customer) {
+      return res
         .status(404)
         .json({ success: false, message: `Customer with id ${id} not found` });
-    else
-      res.json({
-        success: true,
-        data: {
-          id: customer.customer_id,
-          name: customer.name,
-          email: customer.email,
-        },
-      });
+    }
+    res.json({
+      success: true,
+      data: {
+        id: customer.customer_id,
+        name: customer.name,
+        email: customer.email,
+      },
+    });
   },
 );
 app.post(
@@ -53,7 +53,7 @@ app.post(
   (req: Request<never, CustomerAPIRes, CreateCustomerDto>, res) => {
     const reqBody = req.body;
     if (!reqBody.name || !reqBody.email) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         message: "Non empty name and email are required ",
       });

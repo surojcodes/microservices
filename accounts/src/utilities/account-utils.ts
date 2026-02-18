@@ -4,5 +4,5 @@ export const generateAccountNumber = (
   accountType: string,
   accounts: AccountEntity[],
 ): string => {
-  return "";
+  return "apple";
 };

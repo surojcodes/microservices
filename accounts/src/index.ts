@@ -39,20 +39,19 @@ app.get(
       (account) => account.account_number === accountId,
     );
     if (!account)
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         message: `Account with id ${accountId} not found`,
       });
-    else
-      res.json({
-        success: true,
-        data: {
-          accountNumber: account.account_number,
-          customerId: account.customer_id,
-          balance: account.balance,
-          accountType: account.accountType,
-        },
-      });
+    res.json({
+      success: true,
+      data: {
+        accountNumber: account.account_number,
+        customerId: account.customer_id,
+        balance: account.balance,
+        accountType: account.accountType,
+      },
+    });
   },
 );
 
@@ -82,7 +81,7 @@ app.post(
   (req: Request<never, AccountAPIRes, CreateAccountDto>, res) => {
     const reqBody = req.body;
     if (!reqBody.accountType || !reqBody.customerId) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         message: "Customer ID and account type are required",
       });
