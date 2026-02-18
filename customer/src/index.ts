@@ -8,8 +8,12 @@ const app = express();
 configDotenv();
 const PORT = process.env.PORT;
 app.use(express.json());
-interface CreateCustomerDto {
+interface CustomerEntity {
   customer_id: string;
+  name: string;
+  email: string;
+}
+interface CreateCustomerDto {
   name: string;
   email: string;
 }
@@ -69,7 +73,7 @@ app.post(
       });
     }
     const customers = data.customers;
-    const newCustomer: CreateCustomerDto = {
+    const newCustomer: CustomerEntity = {
       customer_id: String(customers.length + 1),
       email: reqBody.email,
       name: reqBody.name,
