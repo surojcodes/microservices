@@ -1,9 +1,13 @@
 import { Account } from "../generated/generated-types";
+enum AccountType {
+  SAVINGS = "SAVINGS",
+  CHECKING = "CHECKING",
+}
 
 export interface AccountDto {
   accountNumber: string;
   customerId: string;
-  type: string;
+  accountType: AccountType;
   balance: number;
 }
 export interface AccountAPIRes {

@@ -1,4 +1,4 @@
-import { Customer } from "../generated/generated-types";
+import { AccountType, Customer } from "../generated/generated-types";
 import {
   AccountDto,
   AccountInternal,
@@ -9,7 +9,7 @@ export const accountMapper = (source: AccountDto): AccountInternal => {
   return {
     accountNumber: source.accountNumber,
     balance: source.balance,
-    type: source.type,
+    accountType: source.accountType as unknown as AccountType,
     customerId: source.customerId,
   };
 };
