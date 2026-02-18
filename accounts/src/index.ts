@@ -11,6 +11,7 @@ import {
 configDotenv();
 const PORT = process.env.PORT;
 const app = express();
+app.use(express.json());
 
 //GET all accounts
 app.get("/accounts", (req: Request<never, AccountAPIRes>, res) => {
@@ -83,7 +84,7 @@ app.post(
     if (!reqBody.type || !reqBody.customerId) {
       res.status(400).json({
         success: false,
-        message: "customer id and account type are required",
+        message: "Customer ID and account type are required",
       });
     }
     const accounts = data.accounts as AccountEntity[];
@@ -93,6 +94,16 @@ app.post(
       balance: reqBody.balance ?? 0,
       account_number: generateAccountNumber(reqBody.type, accounts),
     };
+    accounts.push(newAccount);
+    res.status(201).json({
+      success: true,
+      data: {
+        accountNumber: newAccount.account_number,
+        balance: newAccount.balance,
+        customerId: newAccount.customer_id,
+        type: newAccount.type,
+      },
+    });
   },
 );
 
