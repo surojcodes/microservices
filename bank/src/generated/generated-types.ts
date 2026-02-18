@@ -27,12 +27,28 @@ export enum AccountType {
   Savings = 'SAVINGS'
 }
 
+export type CreateAccountInput = {
+  accountType?: InputMaybe<AccountType>;
+  balance?: InputMaybe<Scalars['Float']['input']>;
+  customerId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Customer = {
   __typename?: 'Customer';
   accounts?: Maybe<Array<Account>>;
   customerId?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createAccount: Account;
+};
+
+
+export type MutationCreateAccountArgs = {
+  input?: InputMaybe<CreateAccountInput>;
 };
 
 export type Query = {

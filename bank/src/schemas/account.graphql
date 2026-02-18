@@ -5,6 +5,12 @@ type Account {
   customer: Customer
 }
 
+input CreateAccountInput {
+  accountType: AccountType
+  balance: Float
+  customerId: String
+}
+
 enum AccountType {
   SAVINGS
   CHECKING
