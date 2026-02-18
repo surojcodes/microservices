@@ -2,31 +2,17 @@ import express, { Request } from "express";
 import data from "./customers.json";
 
 import { configDotenv } from "dotenv";
+import {
+  CreateCustomerDto,
+  CustomerAPIRes,
+  CustomerEntity,
+} from "./models/customer-model";
 
 const app = express();
 
 configDotenv();
 const PORT = process.env.PORT;
 app.use(express.json());
-interface CustomerEntity {
-  customer_id: string;
-  name: string;
-  email: string;
-}
-interface CreateCustomerDto {
-  name: string;
-  email: string;
-}
-interface CustomerDto {
-  id: string;
-  name: string;
-  email: string;
-}
-interface CustomerAPIRes {
-  success: boolean;
-  data?: CustomerDto | CustomerDto[];
-  message?: string;
-}
 
 app.get("/customers", (req: Request<never, CustomerAPIRes>, res) => {
   const customers = data.customers;
@@ -72,7 +58,7 @@ app.post(
         message: "Non empty name and email are required ",
       });
     }
-    const customers = data.customers;
+    const customers = data.customers as CustomerEntity[];
     const newCustomer: CustomerEntity = {
       customer_id: String(customers.length + 1),
       email: reqBody.email,
