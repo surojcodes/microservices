@@ -5,15 +5,19 @@
   - uses Apollo Server
   - codegen
   - axios to communicate to REST APIs
-  - dockerfiles
+  - dockerized
 - communicates synchronously
 
-## May add / In progress
+## In progress
 
 - Authentication with JWT
 - Only graphQL api is publicly available
 - kubernetes deployment files
-- databases for REST API microservices
-- mutations / additional REST endpoints
+- mutations
 - Better error Handling
 - message queue for mutations
+
+## NEXT TODO
+
+- Mutation
+- databases for REST API microservices
