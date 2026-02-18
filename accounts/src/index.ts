@@ -1,7 +1,10 @@
 import express, { Request } from "express";
 import data from "./accounts.json";
 import { configDotenv } from "dotenv";
-import { generateAccountNumber } from "./utilities/account-utils";
+import {
+  generateAccountNumber,
+  isValidAccountType,
+} from "./utilities/account-utils";
 import {
   AccountAPIRes,
   AccountEntity,
@@ -86,6 +89,13 @@ app.post(
         message: "Customer ID and account type are required",
       });
     }
+    if (!isValidAccountType(reqBody.accountType)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Account type - valid values are SAVINGS AND CHECKING",
+      });
+    }
+    //TODO: check if the customer exists by calling customer microservice
     const accounts = data.accounts as AccountEntity[];
     const newAccount: AccountEntity = {
       customer_id: reqBody.customerId,

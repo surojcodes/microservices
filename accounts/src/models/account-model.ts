@@ -23,7 +23,7 @@ export interface AccountAPIRes {
   data?: AccountDto | AccountDto[];
   message?: string;
 }
-enum AccountType {
+export enum AccountType {
   SAVINGS = "SAVINGS",
   CHECKING = "CHECKING",
 }
