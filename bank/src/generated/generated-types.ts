@@ -17,10 +17,15 @@ export type Scalars = {
 export type Account = {
   __typename?: 'Account';
   accountNumber?: Maybe<Scalars['String']['output']>;
+  accountType?: Maybe<AccountType>;
   balance?: Maybe<Scalars['Float']['output']>;
   customer?: Maybe<Customer>;
-  type?: Maybe<Scalars['String']['output']>;
 };
+
+export enum AccountType {
+  Checking = 'CHECKING',
+  Savings = 'SAVINGS'
+}
 
 export type Customer = {
   __typename?: 'Customer';

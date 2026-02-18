@@ -1,6 +1,11 @@
 type Account {
   accountNumber: String
-  type: String
+  accountType: AccountType
   balance: Float
   customer: Customer
+}
+
+enum AccountType {
+  SAVINGS
+  CHECKING
 }
