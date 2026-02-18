@@ -1,23 +1,16 @@
 import express, { Request } from "express";
 import data from "./accounts.json";
 import { configDotenv } from "dotenv";
+import { generateAccountNumber } from "./utilities/account-utils";
+import {
+  AccountAPIRes,
+  AccountEntity,
+  CreateAccountDto,
+} from "./models/account-model";
 
 configDotenv();
 const PORT = process.env.PORT;
 const app = express();
-
-interface AccountDto {
-  accountNumber: string;
-  customerId: string;
-  type: string;
-  balance: number;
-}
-
-interface AccountAPIRes {
-  success: boolean;
-  data?: AccountDto | AccountDto[];
-  message?: string;
-}
 
 //GET all accounts
 app.get("/accounts", (req: Request<never, AccountAPIRes>, res) => {
@@ -81,6 +74,27 @@ app.get("/accounts/customers/:customerId", (req, res) => {
     }),
   });
 });
+
+//CREATE an account for a customer
+app.post(
+  "/accounts",
+  (req: Request<never, AccountAPIRes, CreateAccountDto>, res) => {
+    const reqBody = req.body;
+    if (!reqBody.type || !reqBody.customerId) {
+      res.status(400).json({
+        success: false,
+        message: "customer id and account type are required",
+      });
+    }
+    const accounts = data.accounts as AccountEntity[];
+    const newAccount: AccountEntity = {
+      customer_id: reqBody.customerId,
+      type: reqBody.type,
+      balance: reqBody.balance ?? 0,
+      account_number: generateAccountNumber(reqBody.type, accounts),
+    };
+  },
+);
 
 app.listen(PORT, () => {
   console.log(`ACCOUNT_API Listening on ${PORT}`);
