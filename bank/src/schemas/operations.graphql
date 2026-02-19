@@ -6,4 +6,5 @@ type Query {
 }
 type Mutation {
   createAccount(input: CreateAccountInput!): Account!
+  createCustomer(input: CreateCustomerInput!): Customer!
 }

@@ -4,3 +4,8 @@ type Customer {
   email: String
   accounts: [Account!]
 }
+
+input CreateCustomerInput {
+  name: String
+  email: String
+}

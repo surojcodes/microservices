@@ -1,18 +1,21 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import {
   Customer as BankCustomer,
+  MutationCreateCustomerArgs,
   QueryCustomerArgs,
 } from "../generated/generated-types";
 import {
   AccountAPIRes,
   AccountDto,
   AccountInternal,
+  CreateCustomerDto,
   CustomerAPIRes,
   CustomerDto,
 } from "../types/api-response-types";
 import { URLS } from "../config";
 import { accountMapper, customerMapper } from "../mappers/mapper";
 
+//#region Query
 const customers = async (): Promise<BankCustomer[]> => {
   try {
     const { data: customersResponse } = await axios.get<CustomerAPIRes>(
@@ -56,12 +59,31 @@ const accounts = async (customer: BankCustomer): Promise<AccountInternal[]> => {
     throw new Error("Unable to fetch accounts :: " + ex.message);
   }
 };
+//#endregion
 
-export const CustomerQuery = {
-  customers,
-  customer,
+//#region Mutation
+const createCustomer = async (
+  _: never,
+  { input: { email, name } }: MutationCreateCustomerArgs,
+) => {
+  try {
+    const customerResponse = await axios.post<
+      CustomerAPIRes,
+      AxiosResponse<CustomerAPIRes>,
+      CreateCustomerDto
+    >(URLS.CUSTOMERS_API_URL, {
+      name,
+      email,
+    });
+    if (!customerResponse.data.success) throw new Error();
+    const newCustomer = customerResponse.data.data as CustomerDto;
+    return customerMapper(newCustomer);
+  } catch (ex) {
+    throw new Error("Unable to create customer :: " + ex.message);
+  }
 };
+//#endregion
 
-export const Customer = {
-  accounts,
-};
+export const CustomerQuery = { customers, customer };
+export const Customer = { accounts };
+export const CustomerMutation = { createCustomer };

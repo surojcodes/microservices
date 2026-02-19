@@ -87,14 +87,6 @@ const createAccount = async (
 };
 //#endregion
 
-export const AccountQuery = {
-  accounts,
-  account,
-};
-export const Account = {
-  customer,
-};
-
-export const AccountMutation = {
-  createAccount,
-};
+export const AccountQuery = { accounts, account };
+export const Account = { customer };
+export const AccountMutation = { createAccount };

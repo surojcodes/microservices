@@ -33,3 +33,8 @@ export interface CreateAccountDto {
   accountType: AccountType;
   balance: number;
 }
+
+export interface CreateCustomerDto {
+  name: string;
+  email: string;
+}
