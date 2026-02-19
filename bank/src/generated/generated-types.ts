@@ -28,9 +28,9 @@ export enum AccountType {
 }
 
 export type CreateAccountInput = {
-  accountType?: InputMaybe<AccountType>;
+  accountType: AccountType;
   balance?: InputMaybe<Scalars['Float']['input']>;
-  customerId?: InputMaybe<Scalars['String']['input']>;
+  customerId: Scalars['String']['input'];
 };
 
 export type Customer = {
@@ -48,7 +48,7 @@ export type Mutation = {
 
 
 export type MutationCreateAccountArgs = {
-  input?: InputMaybe<CreateAccountInput>;
+  input: CreateAccountInput;
 };
 
 export type Query = {

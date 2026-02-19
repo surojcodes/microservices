@@ -5,5 +5,5 @@ type Query {
   customer(customerId: String): Customer
 }
 type Mutation {
-  createAccount(input: CreateAccountInput): Account!
+  createAccount(input: CreateAccountInput!): Account!
 }

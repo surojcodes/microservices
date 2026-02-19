@@ -6,9 +6,9 @@ type Account {
 }
 
 input CreateAccountInput {
-  accountType: AccountType
+  accountType: AccountType!
   balance: Float
-  customerId: String
+  customerId: String!
 }
 
 enum AccountType {
