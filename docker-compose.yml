@@ -21,6 +21,8 @@ services:
     container_name: bank
     environment:
       PORT: 4000
+      ACCOUNT_API_HOST: account
+      CUSTOMER_API_HOST: customer
     ports:
       - "${BANK_HOST_PORT}:4000"
     depends_on:
