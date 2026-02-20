@@ -5,6 +5,7 @@ services:
     container_name: account
     environment:
       PORT: 3001 #inject this env var in account container
+      DATABASE_URL: postgresql://account_user:secret@account-db:5432/account_db
     ports:
       - "${ACCOUNT_HOST_PORT}:3001"
   customer:
@@ -13,6 +14,7 @@ services:
     container_name: customer
     environment:
       PORT: 3000
+      DATABASE_URL: postgresql://customer_user:secret@customer-db:5432/customer_db
     ports:
       - "${CUSTOMER_HOST_PORT}:3000"
   bank:
