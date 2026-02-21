@@ -5,7 +5,6 @@ services:
     container_name: account
     environment:
       PORT: 3001 #inject this env var in account container
-      DATABASE_URL: postgresql://account_user:secret@account-db:5432/account_db
     ports:
       - "${ACCOUNT_HOST_PORT}:3001"
   customer:
@@ -14,7 +13,6 @@ services:
     container_name: customer
     environment:
       PORT: 3000
-      DATABASE_URL: postgresql://customer_user:secret@customer-db:5432/customer_db
     ports:
       - "${CUSTOMER_HOST_PORT}:3000"
   bank:
@@ -30,29 +28,3 @@ services:
     depends_on:
       - account
       - customer
-  account-db:
-    image: postgres:15
-    container_name: account-db
-    environment:
-      POSTGRES_USER: account_user
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: account_db
-    ports:
-      - "5432:5432" # optional, only if you want host access
-    volumes:
-      - account-db-data:/var/lib/postgresql/data
-
-  customer-db:
-    image: postgres:15
-    container_name: customer-db
-    environment:
-      POSTGRES_USER: customer_user
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: customer_db
-    ports:
-      - "5433:5432"
-    volumes:
-      - customer-db-data:/var/lib/postgresql/data
-volumes:
-  account-db-data:
-  customer-db-data:
