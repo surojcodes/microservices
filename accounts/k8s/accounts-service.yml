@@ -4,35 +4,7 @@ metadata:
   name: account-service
 spec:
   selector:
-    app: account #matches pod label
-  type: NodePort #expose service outside the cluster
+    app: account
   ports:
-    - port: 3001 # Service port inside cluster / Other pods in the cluster can reach the Service at accounts-service:3001
-      targetPort: 3001 # Pod container port /The Service forwards the traffic to this port inside the pod container
-      nodePort: 31001 # Port on the node / external port on Minikube node /External apps (Postman, browser) access the Service using <Minikube-IP>:31001
-
-
-#       External App / Postman
-#        (http://<Minikube-IP>:31001)
-#                   │
-#                   ▼
-#         ┌─────────────────────┐
-#         │   accounts-service  │
-#         │  type: NodePort     │
-#         │  port: 3001         │  <-- cluster-internal port
-#         │  nodePort: 31001    │  <-- exposed externally
-#         │  targetPort: 3001   │  <-- forwards to pod container
-#         └─────────────────────┘
-#                   │
-#                   ▼
-#             account-pod
-#           ┌───────────────┐
-#           │ Container App │
-#           │ listens:3001  │
-#           └───────────────┘
-
-#How traffic flows
-#
-#1. Postman / Browser → Minikube IP + nodePort (31001)
-#2. Service (accounts-service) receives traffic on nodePort, maps it to targetPort
-#3. Pod container receives traffic on containerPort (3001)
+    - port: 3001
+      targetPort: 3001
