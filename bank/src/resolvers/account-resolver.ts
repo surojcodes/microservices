@@ -1,6 +1,5 @@
 import { URLS } from "../config";
 import {
-  CreateAccountInput,
   Customer,
   MutationCreateAccountArgs,
   QueryAccountArgs,
