@@ -10,5 +10,5 @@ app.use(express.json());
 app.use("/accounts", accountRouter);
 
 app.listen(PORT, () => {
-  console.log(`ACCOUNT_API Listening on ${PORT}`);
+  console.log(`ACCOUNT_API is listening on PORT ${PORT}`);
 });
