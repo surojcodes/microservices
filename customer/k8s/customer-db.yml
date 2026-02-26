@@ -1,0 +1,89 @@
+# -----------------------------
+# Secret (DB credentials)
+# -----------------------------
+apiVersion: v1
+kind: Secret
+metadata:
+  name: customer-db-secret
+type: Opaque
+stringData:
+  POSTGRES_DB: customerdb
+  POSTGRES_USER: ""
+  POSTGRES_PASSWORD: ""
+
+---
+# -----------------------------
+# Persistent Volume Claim (PVC) : pod dies → volume stays → new pod mounts same data
+# -----------------------------
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: customer-db-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# -----------------------------
+# PostgreSQL StatefulSet
+# -----------------------------
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: customer-db
+spec:
+  serviceName: customer-db-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer-db
+  template:
+    metadata:
+      labels:
+        app: customer-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: customer-db-secret
+          volumeMounts:
+            - name: customer-db-storage
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+  volumeClaimTemplates:
+    - metadata:
+        name: customer-db-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+
+---
+# -----------------------------
+# ClusterIP Service (internal)
+# -----------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-db-service
+spec:
+  type: ClusterIP
+  selector:
+    app: customer-db
+  ports:
+    - port: 5432
+      targetPort: 5432
