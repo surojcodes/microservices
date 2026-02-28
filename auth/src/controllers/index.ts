@@ -4,8 +4,11 @@ import { validateRegisterInput } from "../utils/validation-utils";
 
 export const login = (
   req: Request<never, never, createUserDto>,
-  res: Response<AuthAPIRes>,
+  res: Response,
 ) => {
+  res.json({ message: "Registered" });
+};
+export const register = (req: Request, res: Response) => {
   const createUserInput = req.body;
   const validationRes = validateRegisterInput(createUserInput);
   if (!validationRes.success) {
@@ -14,7 +17,4 @@ export const login = (
       message: validationRes.message,
     });
   }
-};
-export const register = (req: Request, res: Response) => {
-  res.json({ message: "Registered" });
 };
