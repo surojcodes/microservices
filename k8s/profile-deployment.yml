@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: customer-deployment
+  name: profile-deployment
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: customer
+      app: profile
   template:
     metadata:
       labels:
-        app: customer
+        app: profile
     spec:
       containers:
-        - name: customer
-          image: customer:1.0.0
+        - name: profile
+          image: profile:1.0.0
           imagePullPolicy: Never
           ports:
             - containerPort: 3000

@@ -25,4 +25,5 @@ export const validateRegisterInput = (
       message: "Password should be at least 4 characters long",
     };
   }
+  return { success: true };
 };
