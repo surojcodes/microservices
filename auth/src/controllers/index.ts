@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { AuthAPIRes, createUserDto } from "../models";
-import { validateRegisterInput } from "../utils";
+import { validateRegisterInput } from "../utils/validation-utils";
 
 export const login = (
   req: Request<never, never, createUserDto>,

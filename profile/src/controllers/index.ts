@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { CreateProfileDto, ProfileAPIRes, ProfileEntity } from "../models";
 import data from "../profiles.json";
-import { validateCreateProfile } from "../utils";
+import { validateCreateProfile } from "../utils/validation-utils";
 export const getProfiles = (req: Request, res: Response<ProfileAPIRes>) => {
   const profiles = data.profiles;
   res.status(200).json({
