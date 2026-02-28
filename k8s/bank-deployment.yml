@@ -23,8 +23,8 @@ spec:
               value: "4000"
             - name: ACCOUNT_API_HOST
               value: account-service
-            - name: CUSTOMER_API_HOST
-              value: customer-service
+            - name: PROFILE_API_HOST
+              value: profile-service
           resources:
             requests:
               memory: "128Mi"
