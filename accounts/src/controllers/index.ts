@@ -2,35 +2,34 @@ import { Request, Response } from "express";
 import {
   AccountAPIRes,
   AccountEntity,
+  AccountStatus,
   CreateAccountDto,
 } from "../models/account-model";
 import data from "../accounts.json";
-import {
-  generateAccountNumber,
-  isValidAccountType,
-} from "../utilities/account-utils";
+import { generateAccountNumber } from "../utilities/account-utils";
+import { validateCreateAccount } from "../utilities/validation-utils";
 
-export const getAccounts = (
-  req: Request<never, AccountAPIRes>,
-  res: Response,
-) => {
+export const getAccounts = (req: Request, res: Response<AccountAPIRes>) => {
   const accounts = data.accounts as AccountEntity[];
   res.status(200).json({
     success: true,
     data: accounts.map((account: AccountEntity) => {
       return {
         accountNumber: account.account_number,
-        customerId: account.customer_id,
+        userId: account.user_id,
         balance: account.balance,
-        accountType: account.accountType,
+        accountType: account.account_type,
+        accountNickname: account.account_nickname,
+        accountStatus: account.account_status,
+        createdAt: account.created_at,
       };
     }),
   });
 };
 
 export const getAccount = (
-  req: Request<{ id: String }, AccountAPIRes>,
-  res: Response,
+  req: Request<{ id: string }>,
+  res: Response<AccountAPIRes>,
 ) => {
   const { id: accountId } = req.params;
   const accounts = data.accounts as AccountEntity[];
@@ -46,59 +45,62 @@ export const getAccount = (
     success: true,
     data: {
       accountNumber: account.account_number,
-      customerId: account.customer_id,
+      userId: account.user_id,
       balance: account.balance,
-      accountType: account.accountType,
+      accountType: account.account_type,
+      accountStatus: account.account_status,
+      createdAt: account.created_at,
+      accountNickname: account.account_nickname,
     },
   });
 };
 
-export const getCustomerAccounts = (
+export const getUserAccounts = (
   req: Request<{ id: string }>,
-  res: Response,
-) => {
-  const { id: customerId } = req.params;
+  res: Response<AccountAPIRes>,
+): Response<AccountAPIRes> => {
+  const { id: userId } = req.params;
   const accounts = data.accounts as AccountEntity[];
-  const customerAccounts = accounts.filter(
-    (account) => account.customer_id === customerId,
-  );
-  res.status(200).json({
+  const userAccounts = accounts.filter((account) => account.user_id === userId);
+  return res.status(200).json({
     success: true,
-    data: customerAccounts.map((account) => {
+    data: userAccounts.map((account) => {
       return {
         accountNumber: account.account_number,
-        customerId: account.customer_id,
+        userId: account.user_id,
         balance: account.balance,
-        accountType: account.accountType,
+        accountType: account.account_type,
+        accountStatus: account.account_status,
+        createdAt: account.created_at,
+        accountNickname: account.account_nickname,
       };
     }),
   });
 };
 
 export const createAccount = (
-  req: Request<never, AccountAPIRes, CreateAccountDto>,
-  res: Response,
+  req: Request<never, never, CreateAccountDto>,
+  res: Response<AccountAPIRes>,
 ) => {
   const reqBody = req.body;
-  if (!reqBody.accountType || !reqBody.customerId) {
+  const validation = validateCreateAccount(reqBody);
+  if (!validation.success) {
     return res.status(400).json({
       success: false,
-      message: "Customer ID and account type are required",
+      message: validation.message || "Invalid request body",
     });
   }
-  if (!isValidAccountType(reqBody.accountType)) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid Account type - valid values are SAVINGS AND CHECKING",
-    });
-  }
+
   //TODO: check if the customer exists by calling customer microservice
   const accounts = data.accounts as AccountEntity[];
   const newAccount: AccountEntity = {
-    customer_id: reqBody.customerId,
-    accountType: reqBody.accountType,
+    user_id: reqBody.userId,
+    account_type: reqBody.accountType,
     balance: reqBody.balance ?? 0,
     account_number: generateAccountNumber(reqBody.accountType, accounts),
+    account_nickname: reqBody.accountNickname ?? "",
+    account_status: AccountStatus.ACTIVE,
+    created_at: new Date().toISOString().split("T")[0],
   };
   accounts.push(newAccount);
   res.status(201).json({
@@ -106,8 +108,11 @@ export const createAccount = (
     data: {
       accountNumber: newAccount.account_number,
       balance: newAccount.balance,
-      customerId: newAccount.customer_id,
-      accountType: newAccount.accountType,
+      userId: newAccount.user_id,
+      accountType: newAccount.account_type,
+      accountNickname: newAccount.account_nickname,
+      accountStatus: newAccount.account_status,
+      createdAt: newAccount.created_at,
     },
   });
 };

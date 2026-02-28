@@ -1,21 +1,28 @@
 export interface AccountEntity {
   account_number: string;
-  customer_id: string;
-  accountType: AccountType;
+  user_id: string;
+  account_type: AccountType;
   balance: number;
+  account_status: AccountStatus;
+  created_at: string;
+  account_nickname: string;
 }
 
 export interface CreateAccountDto {
-  customerId: string;
+  userId: string;
   accountType: AccountType;
   balance: number;
+  accountNickname: string;
 }
 
 export interface AccountDto {
   accountNumber: string;
-  customerId: string;
+  userId: string;
   accountType: AccountType;
   balance: number;
+  accountStatus: AccountStatus;
+  createdAt: string;
+  accountNickname: string;
 }
 
 export interface AccountAPIRes {
@@ -26,4 +33,9 @@ export interface AccountAPIRes {
 export enum AccountType {
   SAVINGS = "SAVINGS",
   CHECKING = "CHECKING",
+}
+
+export enum AccountStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
 }

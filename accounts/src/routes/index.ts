@@ -3,13 +3,13 @@ import {
   createAccount,
   getAccount,
   getAccounts,
-  getCustomerAccounts,
+  getUserAccounts,
 } from "../controllers";
 
 const accountRouter = express.Router();
 
 accountRouter.route("/").get(getAccounts).post(createAccount);
 accountRouter.route("/:id").get(getAccount);
-accountRouter.route("/customers/:id").get(getCustomerAccounts);
+accountRouter.route("/user/:id").get(getUserAccounts);
 
 export default accountRouter;

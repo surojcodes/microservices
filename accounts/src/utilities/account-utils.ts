@@ -5,10 +5,10 @@ export const generateAccountNumber = (
   accounts: AccountEntity[],
 ): string => {
   const checkingCount = accounts.filter(
-    (account) => account.accountType === AccountType.CHECKING,
+    (account) => account.account_type === AccountType.CHECKING,
   ).length;
   const savingsCount = accounts.filter(
-    (account) => account.accountType === AccountType.SAVINGS,
+    (account) => account.account_type === AccountType.SAVINGS,
   ).length;
   switch (accountType) {
     case AccountType.CHECKING:
@@ -18,8 +18,4 @@ export const generateAccountNumber = (
     default:
       throw new Error("Invalid account type");
   }
-};
-
-export const isValidAccountType = (accountType: any) => {
-  return Object.values(AccountType).includes(accountType);
 };
