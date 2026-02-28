@@ -1,8 +1,8 @@
-import { AccountType, Customer } from "../generated/generated-types";
+import { AccountType, Profile } from "../generated/generated-types";
 import {
   AccountDto,
   AccountInternal,
-  CustomerDto,
+  ProfileDto,
 } from "../types/api-response-types";
 
 export const accountMapper = (source: AccountDto): AccountInternal => {
@@ -10,13 +10,13 @@ export const accountMapper = (source: AccountDto): AccountInternal => {
     accountNumber: source.accountNumber,
     balance: source.balance,
     accountType: source.accountType as unknown as AccountType,
-    customerId: source.customerId,
+    userId: source.userId,
   };
 };
 
-export const customerMapper = (source: CustomerDto): Customer => {
+export const profileMapper = (source: ProfileDto): Profile => {
   return {
-    customerId: source.id,
+    userId: source.userId,
     email: source.email,
     name: source.name,
   };

@@ -1,10 +1,10 @@
 type Query {
   accounts: [Account!]!
-  customers: [Customer!]!
+  profiles: [Profile!]!
   account(accountNumber: String): Account
-  customer(customerId: String): Customer
+  profile(userId: String): Profile
 }
 type Mutation {
   createAccount(input: CreateAccountInput!): Account!
-  createCustomer(input: CreateCustomerInput!): Customer!
+  createProfile(input: CreateProfileInput!): Profile!
 }

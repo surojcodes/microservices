@@ -1,9 +1,9 @@
-import { Customer, CustomerMutation, CustomerQuery } from "./customer-resolver";
+import { Profile, ProfileMutation, ProfileQuery } from "./profile-resolver";
 import { AccountQuery, Account, AccountMutation } from "./account-resolver";
 
 export default {
-  Query: { ...CustomerQuery, ...AccountQuery },
+  Query: { ...ProfileQuery, ...AccountQuery },
   Account,
-  Customer,
-  Mutation: { ...AccountMutation, ...CustomerMutation },
+  Profile,
+  Mutation: { ...AccountMutation, ...ProfileMutation },
 };

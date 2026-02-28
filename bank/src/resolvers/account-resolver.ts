@@ -1,6 +1,6 @@
 import { URLS } from "../config";
 import {
-  Customer,
+  Profile,
   MutationCreateAccountArgs,
   QueryAccountArgs,
 } from "../generated/generated-types";
@@ -10,10 +10,10 @@ import {
   AccountDto,
   AccountInternal,
   CreateAccountDto,
-  CustomerAPIRes,
-  CustomerDto,
+  ProfileAPIRes,
+  ProfileDto,
 } from "../types/api-response-types";
-import { accountMapper, customerMapper } from "../mappers/mapper";
+import { accountMapper, profileMapper } from "../mappers/mapper";
 
 //#region Queries
 const accounts = async (): Promise<AccountInternal[]> => {
@@ -47,17 +47,17 @@ const account = async (
     throw new Error("Unable to fetch account :: " + ex.message);
   }
 };
-const customer = async (account: AccountInternal): Promise<Customer> => {
+const profile = async (account: AccountInternal): Promise<Profile> => {
   try {
-    const customerResponse = await axios.get<CustomerAPIRes>(
-      `${URLS.CUSTOMERS_API_URL}/${account.customerId}`,
+    const profileResponse = await axios.get<ProfileAPIRes>(
+      `${URLS.PROFILES_API_URL}/${account.userId}`,
     );
-    if (customerResponse.status === 404 || !customerResponse.data.success)
+    if (profileResponse.status === 404 || !profileResponse.data.success)
       throw new Error();
-    const customer = customerResponse.data;
-    return customerMapper(customer.data as CustomerDto);
+    const profile = profileResponse.data;
+    return profileMapper(profile.data as ProfileDto);
   } catch (ex) {
-    throw new Error("Unable to fetch customer :: " + ex.message);
+    throw new Error("Unable to fetch profile :: " + ex.message);
   }
 };
 //#endregion
@@ -65,7 +65,7 @@ const customer = async (account: AccountInternal): Promise<Customer> => {
 //#region Mutations
 const createAccount = async (
   _: never,
-  { input: { accountType, customerId, balance } }: MutationCreateAccountArgs,
+  { input: { accountType, userId, balance } }: MutationCreateAccountArgs,
 ) => {
   try {
     const accountResponse = await axios.post<
@@ -74,7 +74,7 @@ const createAccount = async (
       CreateAccountDto
     >(URLS.ACCOUNTS_API_URL, {
       accountType,
-      customerId,
+      userId,
       balance: balance ?? 0,
     });
     if (!accountResponse.data.success) throw new Error();
@@ -87,5 +87,5 @@ const createAccount = async (
 //#endregion
 
 export const AccountQuery = { accounts, account };
-export const Account = { customer };
+export const Account = { profile };
 export const AccountMutation = { createAccount };

@@ -6,7 +6,7 @@ enum AccountType {
 
 export interface AccountDto {
   accountNumber: string;
-  customerId: string;
+  userId: string;
   accountType: AccountType;
   balance: number;
 }
@@ -15,26 +15,32 @@ export interface AccountAPIRes {
   data?: AccountDto | AccountDto[];
   message?: string;
 }
-export interface CustomerDto {
-  id: string;
+export interface ProfileDto {
+  userId: string;
   name: string;
   email: string;
+  dob: string;
+  phone: string;
+  address: string;
 }
-export interface CustomerAPIRes {
+export interface ProfileAPIRes {
   success: boolean;
-  data?: CustomerDto | CustomerDto[];
+  data?: ProfileDto | ProfileDto[];
   message?: string;
 }
 export interface AccountInternal extends Account {
-  customerId: string;
+  userId: string;
 }
 export interface CreateAccountDto {
-  customerId: string;
+  userId: string;
   accountType: AccountType;
   balance: number;
 }
 
-export interface CreateCustomerDto {
+export interface CreateProfileDto {
   name: string;
   email: string;
+  dob: string;
+  phone: string;
+  address: string;
 }

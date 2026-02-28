@@ -2,13 +2,13 @@ type Account {
   accountNumber: String
   accountType: AccountType
   balance: Float
-  customer: Customer
+  profile: Profile
 }
 
 input CreateAccountInput {
   accountType: AccountType!
   balance: Float
-  customerId: String!
+  userId: String!
 }
 
 enum AccountType {
