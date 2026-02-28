@@ -6,8 +6,8 @@ import {
   CreateAccountDto,
 } from "../models/account-model";
 import data from "../accounts.json";
-import { generateAccountNumber } from "../utilities/account-utils";
-import { validateCreateAccount } from "../utilities/validation-utils";
+import { generateAccountNumber } from "../utils/account-utils";
+import { validateCreateAccount } from "../utils/validation-utils";
 
 export const getAccounts = (req: Request, res: Response<AccountAPIRes>) => {
   const accounts = data.accounts as AccountEntity[];
