@@ -14,7 +14,7 @@ export interface CreateProfileDto {
   address: string;
 }
 export interface ProfileDto {
-  id: string;
+  userId: string;
   name: string;
   email: string;
   dob: string;

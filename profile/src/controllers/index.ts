@@ -8,7 +8,7 @@ export const getProfiles = (req: Request, res: Response<ProfileAPIRes>) => {
     success: true,
     data: profiles.map((profile) => {
       return {
-        id: profile.user_id,
+        userId: profile.user_id,
         name: profile.name,
         email: profile.email,
         dob: profile.dob,
@@ -34,7 +34,7 @@ export const getProfile = (
   res.json({
     success: true,
     data: {
-      id: profile.user_id,
+      userId: profile.user_id,
       name: profile.name,
       email: profile.email,
       dob: profile.dob,
@@ -69,7 +69,7 @@ export const CreateProfile = (
   res.status(201).json({
     success: true,
     data: {
-      id: newProfile.user_id,
+      userId: newProfile.user_id,
       email: newProfile.email,
       name: newProfile.name,
       dob: newProfile.dob,
