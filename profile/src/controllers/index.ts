@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CreateProfileDto, ProfileAPIRes, ProfileEntity } from "../models";
 import data from "../profiles.json";
+import { validateCreateProfile } from "../utils";
 export const getProfiles = (req: Request, res: Response<ProfileAPIRes>) => {
   const profiles = data.profiles;
   res.status(200).json({
@@ -48,16 +49,11 @@ export const CreateProfile = (
   res: Response<ProfileAPIRes>,
 ) => {
   const reqBody = req.body;
-  if (
-    !reqBody.name ||
-    !reqBody.email ||
-    !reqBody.dob ||
-    !reqBody.phone ||
-    !reqBody.address
-  ) {
+  const validationResult = validateCreateProfile(reqBody);
+  if (!validationResult.success) {
     return res.status(400).json({
       success: false,
-      message: "All fields (name, email, dob, phone, address) are required.",
+      message: validationResult.message,
     });
   }
   const profiles = data.profiles as ProfileEntity[];

@@ -5,7 +5,7 @@
       "name": "Sam Smith",
       "email": "sams@email.com",
       "dob": "1992-04-09",
-      "phone": "123-456-7890",
+      "phone": "1234567890",
       "address": "123 Main St, Anytown, USA"
     },
     {
@@ -13,7 +13,7 @@
       "name": "Monica Adams",
       "email": "monicaa@email.com",
       "dob": "1991-05-12",
-      "phone": "098-765-4321",
+      "phone": "0987654321",
       "address": "456 Elm St, Othertown, USA"
     },
     {
@@ -21,7 +21,7 @@
       "name": "Alice Johns",
       "email": "alicej@email.com",
       "dob": "2001-01-23",
-      "phone": "555-123-4567",
+      "phone": "5551234567",
       "address": "789 Oak St, Sometown, USA"
     }
   ]
