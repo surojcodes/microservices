@@ -19,7 +19,7 @@ import { accountMapper, profileMapper } from "../mappers/mapper";
 const profiles = async (): Promise<CustomerProfile[]> => {
   try {
     const { data: profilesResponse } = await axios.get<ProfileAPIRes>(
-      URLS.PROFILES_API_URL,
+      URLS.PROFILE_API_URL,
     );
     if (profilesResponse.success) {
       const profiles = profilesResponse.data as ProfileDto[];
@@ -28,20 +28,24 @@ const profiles = async (): Promise<CustomerProfile[]> => {
       throw new Error();
     }
   } catch (ex) {
-    throw new Error("Unable to fetch profiles :: " + ex.message);
+    throw new Error(
+      "Unable to fetch profiles :: " + ex.response?.data?.message || ex.message,
+    );
   }
 };
 const profile = async (_: never, args: QueryProfileArgs) => {
   try {
     const profileResponse = await axios.get<ProfileAPIRes>(
-      `${URLS.PROFILES_API_URL}/${args.userId}`,
+      `${URLS.PROFILE_API_URL}/${args.userId}`,
     );
     if (profileResponse.status === 404 || !profileResponse.data.success)
       throw new Error();
     const profile = profileResponse.data;
     return profileMapper(profile.data as ProfileDto);
   } catch (ex) {
-    throw new Error("Unable to fetch profile :: " + ex.message);
+    throw new Error(
+      "Unable to fetch profile :: " + ex.response?.data?.message || ex.message,
+    );
   }
 };
 const accounts = async (
@@ -49,7 +53,7 @@ const accounts = async (
 ): Promise<AccountInternal[]> => {
   try {
     const { data: accountsResponse } = await axios.get<AccountAPIRes>(
-      `${URLS.ACCOUNTS_API_URL}/profiles/${profile.userId}`,
+      `${URLS.ACCOUNT_API_URL}/user/${profile.userId}`,
     );
     if (accountsResponse.success) {
       const accounts = accountsResponse.data as AccountDto[];
@@ -58,7 +62,9 @@ const accounts = async (
       throw new Error();
     }
   } catch (ex) {
-    throw new Error("Unable to fetch accounts :: " + ex.message);
+    throw new Error(
+      "Unable to fetch accounts :: " + ex.response?.data?.message || ex.message,
+    );
   }
 };
 //#endregion
@@ -73,7 +79,7 @@ const createProfile = async (
       ProfileAPIRes,
       AxiosResponse<ProfileAPIRes>,
       CreateProfileDto
-    >(URLS.PROFILES_API_URL, {
+    >(URLS.PROFILE_API_URL, {
       name,
       email,
       address,
@@ -84,7 +90,9 @@ const createProfile = async (
     const newProfile = profileResponse.data.data as ProfileDto;
     return profileMapper(newProfile);
   } catch (ex) {
-    throw new Error("Unable to create profile :: " + ex.message);
+    throw new Error(
+      "Unable to create profile :: " + ex.response?.data?.message || ex.message,
+    );
   }
 };
 //#endregion

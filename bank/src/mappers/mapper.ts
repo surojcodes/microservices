@@ -1,4 +1,8 @@
-import { AccountType, Profile } from "../generated/generated-types";
+import {
+  AccountStatus,
+  AccountType,
+  Profile,
+} from "../generated/generated-types";
 import {
   AccountDto,
   AccountInternal,
@@ -11,6 +15,9 @@ export const accountMapper = (source: AccountDto): AccountInternal => {
     balance: source.balance,
     accountType: source.accountType as unknown as AccountType,
     userId: source.userId,
+    accountNickname: source.accountNickname,
+    accountStatus: source.accountStatus as unknown as AccountStatus,
+    createdAt: source.createdAt,
   };
 };
 
@@ -19,5 +26,8 @@ export const profileMapper = (source: ProfileDto): Profile => {
     userId: source.userId,
     email: source.email,
     name: source.name,
+    phone: source.phone,
+    dob: source.dob,
+    address: source.address,
   };
 };

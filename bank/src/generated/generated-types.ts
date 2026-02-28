@@ -16,11 +16,19 @@ export type Scalars = {
 
 export type Account = {
   __typename?: 'Account';
+  accountNickname?: Maybe<Scalars['String']['output']>;
   accountNumber?: Maybe<Scalars['String']['output']>;
+  accountStatus?: Maybe<AccountStatus>;
   accountType?: Maybe<AccountType>;
   balance?: Maybe<Scalars['Float']['output']>;
+  createdAt?: Maybe<Scalars['String']['output']>;
   profile?: Maybe<Profile>;
 };
+
+export enum AccountStatus {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE'
+}
 
 export enum AccountType {
   Checking = 'CHECKING',
@@ -28,6 +36,7 @@ export enum AccountType {
 }
 
 export type CreateAccountInput = {
+  accountNickname?: InputMaybe<Scalars['String']['input']>;
   accountType: AccountType;
   balance?: InputMaybe<Scalars['Float']['input']>;
   userId: Scalars['String']['input'];

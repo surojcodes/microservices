@@ -2,6 +2,9 @@ type Account {
   accountNumber: String
   accountType: AccountType
   balance: Float
+  accountStatus: AccountStatus
+  createdAt: String
+  accountNickname: String
   profile: Profile
 }
 
@@ -9,9 +12,15 @@ input CreateAccountInput {
   accountType: AccountType!
   balance: Float
   userId: String!
+  accountNickname: String
 }
 
 enum AccountType {
   SAVINGS
   CHECKING
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
 }

@@ -19,7 +19,7 @@ import { accountMapper, profileMapper } from "../mappers/mapper";
 const accounts = async (): Promise<AccountInternal[]> => {
   try {
     const { data: accountsResponse } = await axios.get<AccountAPIRes>(
-      URLS.ACCOUNTS_API_URL,
+      URLS.ACCOUNT_API_URL,
     );
     if (accountsResponse.success) {
       const accounts = accountsResponse.data as AccountDto[];
@@ -28,7 +28,9 @@ const accounts = async (): Promise<AccountInternal[]> => {
       throw new Error();
     }
   } catch (ex) {
-    throw new Error("Unable to fetch accounts :: " + ex.message);
+    throw new Error(
+      "Unable to fetch accounts :: " + ex.response?.data?.message || ex.message,
+    );
   }
 };
 const account = async (
@@ -37,7 +39,7 @@ const account = async (
 ): Promise<AccountInternal | undefined> => {
   try {
     const accountResponse = await axios.get<AccountAPIRes>(
-      `${URLS.ACCOUNTS_API_URL}/${args.accountNumber}`,
+      `${URLS.ACCOUNT_API_URL}/${args.accountNumber}`,
     );
     if (accountResponse.status === 404 || !accountResponse.data.success)
       throw new Error();
@@ -50,14 +52,16 @@ const account = async (
 const profile = async (account: AccountInternal): Promise<Profile> => {
   try {
     const profileResponse = await axios.get<ProfileAPIRes>(
-      `${URLS.PROFILES_API_URL}/${account.userId}`,
+      `${URLS.PROFILE_API_URL}/${account.userId}`,
     );
     if (profileResponse.status === 404 || !profileResponse.data.success)
       throw new Error();
     const profile = profileResponse.data;
     return profileMapper(profile.data as ProfileDto);
   } catch (ex) {
-    throw new Error("Unable to fetch profile :: " + ex.message);
+    throw new Error(
+      "Unable to fetch profile :: " + ex.response?.data?.message || ex.message,
+    );
   }
 };
 //#endregion
@@ -72,7 +76,7 @@ const createAccount = async (
       AccountAPIRes,
       AxiosResponse<AccountAPIRes>,
       CreateAccountDto
-    >(URLS.ACCOUNTS_API_URL, {
+    >(URLS.ACCOUNT_API_URL, {
       accountType,
       userId,
       balance: balance ?? 0,
@@ -81,7 +85,9 @@ const createAccount = async (
     const newAccount = accountResponse.data.data as AccountDto;
     return accountMapper(newAccount);
   } catch (ex) {
-    throw new Error("Unable to create account :: " + ex.message);
+    throw new Error(
+      "Unable to create account :: " + ex.response?.data?.message || ex.message,
+    );
   }
 };
 //#endregion

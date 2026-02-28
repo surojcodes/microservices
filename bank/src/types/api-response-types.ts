@@ -9,6 +9,9 @@ export interface AccountDto {
   userId: string;
   accountType: AccountType;
   balance: number;
+  accountStatus: AccountStatus;
+  createdAt: string;
+  accountNickname: string;
 }
 export interface AccountAPIRes {
   success: boolean;
@@ -35,6 +38,10 @@ export interface CreateAccountDto {
   userId: string;
   accountType: AccountType;
   balance: number;
+}
+export enum AccountStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
 }
 
 export interface CreateProfileDto {
