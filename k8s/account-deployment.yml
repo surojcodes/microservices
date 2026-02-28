@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: account
-          image: account:2.0.0
+          image: account:1.0.0
           imagePullPolicy: Never
           ports:
             - containerPort: 3001
