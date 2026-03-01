@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { AuthAPIRes, RegisterUserInput } from "../models";
 import { validateRegisterInput } from "../utils/validation-utils";
 import { getPrismaErrorMessage, prisma } from "../utils/prisma";
+import { hashPassword } from "../utils/auth-utils";
 
 export const login = (req: Request, res: Response) => {
   res.json({ message: "Registered" });
@@ -25,7 +26,7 @@ export const register = async (
     const newUser = await prisma.user.create({
       data: {
         username,
-        password,
+        password: await hashPassword(password),
         role: "USER",
         profile: {
           create: {
