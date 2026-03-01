@@ -126,9 +126,20 @@ export const register = async (
         },
       },
     });
+    const jwt = signJWT({
+      user_id: newUser.user_id,
+      username: newUser.username,
+      role: newUser.role as UserRole,
+    });
+    res.cookie("token", jwt, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: parseInt(process.env.JWT_EXPIRES_IN_MS || "3600000"), // default 1 hour
+    });
     return res.json({
       success: true,
-      data: newUser,
+      data: { ...newUser, token: jwt },
       message: "User registered successfully",
     });
   } catch (err) {
