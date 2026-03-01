@@ -13,4 +13,4 @@
 
 ## In progress
 
-- auth microservices (JWT Tokens)
+- auth microservices (JWT Tokens) :: will be very simple, might add refresh tokens, JWE Or an identity provider later
