@@ -3,13 +3,18 @@ export enum UserRole {
   ADMIN = "ADMIN",
 }
 
-export interface createUserDto {
+export interface RegisterUserInput {
   username: string;
   password: string;
+  name: string;
+  email: string;
+  dob: string;
+  phone: string;
+  address: string;
 }
 
 export interface AuthAPIRes {
   success: boolean;
-  data?: string;
+  data?: unknown;
   message?: string;
 }
