@@ -12,7 +12,7 @@ import {
   CreateAccountDto,
   ProfileAPIRes,
   ProfileDto,
-} from "../types/api-response-types";
+} from "../types/downstream-types";
 import { accountMapper, profileMapper } from "../mappers/mapper";
 
 //#region Queries

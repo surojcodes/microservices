@@ -11,7 +11,7 @@ import {
   CreateProfileDto,
   ProfileAPIRes,
   ProfileDto,
-} from "../types/api-response-types";
+} from "../types/downstream-types";
 import { URLS } from "../config";
 import { accountMapper, profileMapper } from "../mappers/mapper";
 

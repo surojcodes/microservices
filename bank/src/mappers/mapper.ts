@@ -7,7 +7,7 @@ import {
   AccountDto,
   AccountInternal,
   ProfileDto,
-} from "../types/api-response-types";
+} from "../types/downstream-types";
 
 export const accountMapper = (source: AccountDto): AccountInternal => {
   return {
