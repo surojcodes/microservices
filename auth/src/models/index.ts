@@ -12,7 +12,10 @@ export interface RegisterUserInput {
   phone: string;
   address: string;
 }
-
+export interface LoginUserInput {
+  username: string;
+  password: string;
+}
 export interface AuthAPIRes {
   success: boolean;
   data?: unknown;

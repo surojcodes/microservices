@@ -85,3 +85,30 @@ export const validateRegisterInput = (
   }
   return { success: true };
 };
+export const validateLoginInput = (loginInput: {
+  username: string;
+  password: string;
+}): ValidationResponse => {
+  if (!loginInput) {
+    return {
+      success: false,
+      message: "Request body is required",
+    };
+  }
+  if (!loginInput.username || !loginInput.password) {
+    return {
+      success: false,
+      message: "Both username and password are required to login",
+    };
+  }
+  if (
+    loginInput.username.trim().length === 0 ||
+    loginInput.password.trim().length === 0
+  ) {
+    return {
+      success: false,
+      message: "Username and password must be non-empty",
+    };
+  }
+  return { success: true };
+};
