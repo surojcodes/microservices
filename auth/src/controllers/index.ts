@@ -1,11 +1,16 @@
 import { Request, Response } from "express";
-import { AuthAPIRes, LoginUserInput, RegisterUserInput } from "../models";
+import {
+  AuthAPIRes,
+  LoginUserInput,
+  RegisterUserInput,
+  UserRole,
+} from "../models";
 import {
   validateLoginInput,
   validateRegisterInput,
 } from "../utils/validation-utils";
 import { getPrismaErrorMessage, prisma } from "../utils/prisma";
-import { hashPassword, isValidPassword } from "../utils/auth-utils";
+import { hashPassword, isValidPassword, signJWT } from "../utils/auth-utils";
 
 export const login = async (
   req: Request<never, never, LoginUserInput>,
@@ -48,9 +53,22 @@ export const login = async (
         message: "Invalid credentials",
       });
     }
+
+    const jwt = signJWT({
+      user_id: user.user_id,
+      username: user.username,
+      role: user.role as UserRole,
+    });
+    res.cookie("token", jwt, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: parseInt(process.env.JWT_EXPIRES_IN_MS || "3600000"), // default 1 hour
+    });
+
     return res.json({
       success: true,
-      data: { user_id: user.user_id, username: user.username, role: user.role },
+      data: { user_id: user.user_id, token: jwt },
       message: "Login successful",
     });
   } catch (err) {

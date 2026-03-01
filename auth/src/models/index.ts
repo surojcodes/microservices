@@ -16,6 +16,11 @@ export interface LoginUserInput {
   username: string;
   password: string;
 }
+export interface JwtClaims {
+  user_id: string;
+  username: string;
+  role: UserRole;
+}
 export interface AuthAPIRes {
   success: boolean;
   data?: unknown;
