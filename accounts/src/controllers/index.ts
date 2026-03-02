@@ -1,84 +1,122 @@
 import { Request, Response } from "express";
 import {
   AccountAPIRes,
-  AccountEntity,
   AccountStatus,
+  AccountType,
   CreateAccountDto,
-} from "../models/account-model";
-import data from "../accounts.json";
-import { generateAccountNumber } from "../utils/account-utils";
+} from "../models";
 import { validateCreateAccount } from "../utils/validation-utils";
+import { prisma, getPrismaErrorMessage } from "../utils/prisma";
 
-export const getAccounts = (req: Request, res: Response<AccountAPIRes>) => {
-  const accounts = data.accounts as AccountEntity[];
-  res.status(200).json({
-    success: true,
-    data: accounts.map((account: AccountEntity) => {
-      return {
-        accountNumber: account.account_number,
-        userId: account.user_id,
-        balance: account.balance,
-        accountType: account.account_type,
-        accountNickname: account.account_nickname,
-        accountStatus: account.account_status,
-        createdAt: account.created_at,
-      };
-    }),
-  });
+//TODO : ONLY ADMIN CAN GET ANYONE'S ACCOUNT, USER CAN ONLY GET HIS/HER ACCOUNT. IMPLEMENT AUTHORIZATION LOGIC
+export const getAccounts = async (
+  req: Request,
+  res: Response<AccountAPIRes>,
+) => {
+  try {
+    const accounts = await prisma.account.findMany();
+    res.status(200).json({
+      success: true,
+      data: accounts.map((account) => {
+        return {
+          accountNumber: account.account_number,
+          userId: account.user_id,
+          balance: account.balance,
+          accountType: account.account_type as AccountType,
+          accountNickname: account.account_nickname || "",
+          accountStatus: account.account_status as AccountStatus,
+          createdAt: account.created_at,
+        };
+      }),
+    });
+  } catch (err) {
+    console.error("Error fetching accounts:", err);
+    const { status, message } = getPrismaErrorMessage(err);
+    res.status(status).json({
+      success: false,
+      message,
+    });
+  }
 };
 
-export const getAccount = (
+//TODO : ADMIN CAN ONLY GET ANYONE'S ACCOUNT, USER CAN ONLY GET HIS/HER ACCOUNT. IMPLEMENT AUTHORIZATION LOGIC
+export const getAccount = async (
   req: Request<{ id: string }>,
   res: Response<AccountAPIRes>,
 ) => {
-  const { id: accountId } = req.params;
-  const accounts = data.accounts as AccountEntity[];
-  const account = accounts.find(
-    (account) => account.account_number === accountId,
-  );
-  if (!account)
-    return res.status(404).json({
-      success: false,
-      message: `Account with id ${accountId} not found`,
+  const { id } = req.params;
+  try {
+    const accountId = Number(id);
+    const account = await prisma.account.findUnique({
+      where: {
+        account_number: accountId,
+      },
     });
-  res.json({
-    success: true,
-    data: {
-      accountNumber: account.account_number,
-      userId: account.user_id,
-      balance: account.balance,
-      accountType: account.account_type,
-      accountStatus: account.account_status,
-      createdAt: account.created_at,
-      accountNickname: account.account_nickname,
-    },
-  });
-};
-
-export const getUserAccounts = (
-  req: Request<{ id: string }>,
-  res: Response<AccountAPIRes>,
-): Response<AccountAPIRes> => {
-  const { id: userId } = req.params;
-  const accounts = data.accounts as AccountEntity[];
-  const userAccounts = accounts.filter((account) => account.user_id === userId);
-  return res.status(200).json({
-    success: true,
-    data: userAccounts.map((account) => {
-      return {
+    if (!account)
+      return res.status(404).json({
+        success: false,
+        message: `Account with id ${id} not found`,
+      });
+    res.json({
+      success: true,
+      data: {
         accountNumber: account.account_number,
         userId: account.user_id,
         balance: account.balance,
-        accountType: account.account_type,
-        accountStatus: account.account_status,
+        accountType: account.account_type as AccountType,
+        accountStatus: account.account_status as AccountStatus,
         createdAt: account.created_at,
-        accountNickname: account.account_nickname,
-      };
-    }),
-  });
+        accountNickname: account.account_nickname || "",
+      },
+    });
+  } catch (err) {
+    console.error(`Error fetching account with id ${id}:`, err);
+    const { status, message } = getPrismaErrorMessage(err);
+    res.status(status).json({
+      success: false,
+      message,
+    });
+  }
 };
 
-export const createAccount = (
+//TODO : ADMIN CAN ONLY GET ANYONE'S ACCOUNT, USER CAN ONLY GET HIS/HER ACCOUNT. IMPLEMENT AUTHORIZATION LOGIC
+export const getUserAccounts = async (
+  req: Request<{ id: string }>,
+  res: Response<AccountAPIRes>,
+): Promise<Response<AccountAPIRes>> => {
+  const { id: userId } = req.params;
+  try {
+    const userAccounts = await prisma.account.findMany({
+      where: {
+        user_id: userId,
+      },
+    });
+    return res.status(200).json({
+      success: true,
+      data: userAccounts.map((account) => {
+        return {
+          accountNumber: account.account_number,
+          userId: account.user_id,
+          balance: account.balance,
+          accountType: account.account_type as AccountType,
+          accountStatus: account.account_status as AccountStatus,
+          createdAt: account.created_at,
+          accountNickname: account.account_nickname || "",
+        };
+      }),
+    });
+  } catch (err) {
+    console.error(`Error fetching accounts for user with id ${userId}:`, err);
+    const { status, message } = getPrismaErrorMessage(err);
+    return res.status(status).json({
+      success: false,
+      message,
+    });
+  }
+};
+
+//TODO : ONLY ADMIN CAN CREATE ACCOUNT FOR ANY USER, USER CAN ONLY CREATE ACCOUNT FOR HIM/HERSELF. IMPLEMENT AUTHORIZATION LOGIC
+export const createAccount = async (
   req: Request<never, never, CreateAccountDto>,
   res: Response<AccountAPIRes>,
 ) => {
@@ -90,29 +128,35 @@ export const createAccount = (
       message: validation.message || "Invalid request body",
     });
   }
-
-  //TODO: check if the customer exists by calling customer microservice
-  const accounts = data.accounts as AccountEntity[];
-  const newAccount: AccountEntity = {
-    user_id: reqBody.userId,
-    account_type: reqBody.accountType,
-    balance: reqBody.balance ?? 0,
-    account_number: generateAccountNumber(reqBody.accountType, accounts),
-    account_nickname: reqBody.accountNickname ?? "",
-    account_status: AccountStatus.ACTIVE,
-    created_at: new Date().toISOString().split("T")[0],
-  };
-  accounts.push(newAccount);
-  res.status(201).json({
-    success: true,
-    data: {
-      accountNumber: newAccount.account_number,
-      balance: newAccount.balance,
-      userId: newAccount.user_id,
-      accountType: newAccount.account_type,
-      accountNickname: newAccount.account_nickname,
-      accountStatus: newAccount.account_status,
-      createdAt: newAccount.created_at,
-    },
-  });
+  try {
+    const newAccount = await prisma.account.create({
+      data: {
+        user_id: reqBody.userId,
+        account_type: reqBody.accountType,
+        balance: reqBody.balance ?? 0,
+        account_nickname: reqBody.accountNickname ?? "",
+        account_status: AccountStatus.ACTIVE,
+        created_at: new Date().toISOString().split("T")[0],
+      },
+    });
+    res.status(201).json({
+      success: true,
+      data: {
+        accountNumber: newAccount.account_number,
+        balance: newAccount.balance,
+        userId: newAccount.user_id,
+        accountType: newAccount.account_type as AccountType,
+        accountNickname: newAccount.account_nickname || "",
+        accountStatus: newAccount.account_status as AccountStatus,
+        createdAt: newAccount.created_at,
+      },
+    });
+  } catch (err) {
+    console.error("Error creating account:", err);
+    const { status, message } = getPrismaErrorMessage(err);
+    res.status(status).json({
+      success: false,
+      message,
+    });
+  }
 };

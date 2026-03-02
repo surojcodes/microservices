@@ -1,22 +1,12 @@
-export interface AccountEntity {
-  account_number: string;
-  user_id: string;
-  account_type: AccountType;
-  balance: number;
-  account_status: AccountStatus;
-  created_at: string;
-  account_nickname: string;
-}
-
 export interface CreateAccountDto {
   userId: string;
   accountType: AccountType;
   balance: number;
-  accountNickname: string;
+  accountNickname?: string;
 }
 
 export interface AccountDto {
-  accountNumber: string;
+  accountNumber: number;
   userId: string;
   accountType: AccountType;
   balance: number;

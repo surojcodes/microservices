@@ -1,4 +1,4 @@
-import { AccountType } from "../models/account-model";
+import { AccountType } from "../models";
 
 export interface ValidationResponse {
   success: boolean;

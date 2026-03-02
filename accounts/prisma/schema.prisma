@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Account {
+  account_number   Int     @id @default(autoincrement())
+  account_type     String
+  account_status   String  @default("ACTIVE")
+  balance          Float   @default(0)
+  account_nickname String?
+  user_id          String
+  created_at       String
+}

@@ -20,6 +20,7 @@ model User{
   password String
   role String @default("USER")
   profile Profile?
+  accounts Account[]
 }
 
 model Profile{
@@ -31,4 +32,15 @@ model Profile{
   phone String @unique
   address String
   user User @relation(fields: [user_id], references: [user_id])
+}
+
+model Account{
+  account_number Int @id @default(autoincrement())
+  account_type String
+  account_status String @default("ACTIVE")
+  balance Float @default(0)
+  account_nickname String?
+  user_id String
+  user User @relation(fields: [user_id], references: [user_id])
+  created_at String 
 }
