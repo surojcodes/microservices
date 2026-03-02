@@ -20,7 +20,9 @@ spec:
             - containerPort: 3000
           env:
             - name: PORT
-              value: "3001"
+              value: "3000"
+            - name: APP_DATABASE_URL
+              value: "postgresql://appuser:apppass@app-db--service:5432/app_db"
           resources:
             requests:
               memory: "128Mi"

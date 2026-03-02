@@ -25,6 +25,8 @@ spec:
               value: account-service
             - name: PROFILE_API_HOST
               value: profile-service
+            - name: APP_DATABASE_URL
+              value: "postgresql://appuser:apppass@app-db--service:5432/app_db"
           resources:
             requests:
               memory: "128Mi"
