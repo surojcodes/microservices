@@ -14,12 +14,22 @@ import {
   ProfileDto,
 } from "../types/downstream-types";
 import { accountMapper, profileMapper } from "../mappers/mapper";
+import { BankServiceContext } from "../types/bank-api-types";
 
 //#region Queries
-const accounts = async (): Promise<AccountInternal[]> => {
+const accounts = async (
+  _: never,
+  __: never,
+  context: BankServiceContext,
+): Promise<AccountInternal[]> => {
   try {
     const { data: accountsResponse } = await axios.get<AccountAPIRes>(
       URLS.ACCOUNT_API_URL,
+      {
+        headers: {
+          authorization: context.authorization,
+        },
+      },
     );
     if (accountsResponse.success) {
       const accounts = accountsResponse.data as AccountDto[];
@@ -28,6 +38,7 @@ const accounts = async (): Promise<AccountInternal[]> => {
       throw new Error();
     }
   } catch (ex) {
+    console.error("Error fetching accounts:", ex); // Debug log
     throw new Error(
       "Unable to fetch accounts :: " + ex.response?.data?.message || ex.message,
     );
@@ -36,10 +47,16 @@ const accounts = async (): Promise<AccountInternal[]> => {
 const account = async (
   _: never,
   args: QueryAccountArgs,
+  context: BankServiceContext,
 ): Promise<AccountInternal | undefined> => {
   try {
     const accountResponse = await axios.get<AccountAPIRes>(
       `${URLS.ACCOUNT_API_URL}/${args.accountNumber}`,
+      {
+        headers: {
+          authorization: context.authorization,
+        },
+      },
     );
     if (accountResponse.status === 404 || !accountResponse.data.success)
       throw new Error();
@@ -70,17 +87,26 @@ const profile = async (account: AccountInternal): Promise<Profile> => {
 const createAccount = async (
   _: never,
   { input: { accountType, userId, balance } }: MutationCreateAccountArgs,
+  context: BankServiceContext,
 ) => {
   try {
     const accountResponse = await axios.post<
       AccountAPIRes,
       AxiosResponse<AccountAPIRes>,
       CreateAccountDto
-    >(URLS.ACCOUNT_API_URL, {
-      accountType,
-      userId,
-      balance: balance ?? 0,
-    });
+    >(
+      URLS.ACCOUNT_API_URL,
+      {
+        accountType,
+        userId,
+        balance: balance ?? 0,
+      },
+      {
+        headers: {
+          authorization: context.authorization,
+        },
+      },
+    );
     if (!accountResponse.data.success) throw new Error();
     const newAccount = accountResponse.data.data as AccountDto;
     return accountMapper(newAccount);

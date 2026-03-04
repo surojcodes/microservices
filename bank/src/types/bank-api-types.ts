@@ -9,4 +9,5 @@ export enum UserRole {
 }
 export interface BankServiceContext {
   user: JwtClaims | string;
+  authorization: string;
 }

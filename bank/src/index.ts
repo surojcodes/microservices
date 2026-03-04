@@ -27,7 +27,10 @@ async function startExpressServer() {
     authenticateRequest,
     expressMiddleware(apolloServer, {
       context: async ({ req }): Promise<BankServiceContext> => {
-        return { user: req.user };
+        return {
+          user: req.user,
+          authorization: req.headers["authorization"] || "",
+        };
       },
     }),
   );
