@@ -66,10 +66,19 @@ const account = async (
     throw new Error("Unable to fetch account :: " + ex.message);
   }
 };
-const profile = async (account: AccountInternal): Promise<Profile> => {
+const profile = async (
+  account: AccountInternal,
+  _: never,
+  context: BankServiceContext,
+): Promise<Profile> => {
   try {
     const profileResponse = await axios.get<ProfileAPIRes>(
       `${URLS.PROFILE_API_URL}/${account.userId}`,
+      {
+        headers: {
+          authorization: context.authorization,
+        },
+      },
     );
     if (profileResponse.status === 404 || !profileResponse.data.success)
       throw new Error();

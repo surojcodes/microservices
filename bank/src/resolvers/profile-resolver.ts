@@ -14,12 +14,22 @@ import {
 } from "../types/downstream-types";
 import { URLS } from "../config";
 import { accountMapper, profileMapper } from "../mappers/mapper";
+import { BankServiceContext } from "../types/bank-api-types";
 
 //#region Query
-const profiles = async (): Promise<CustomerProfile[]> => {
+const profiles = async (
+  _: never,
+  __: never,
+  context: BankServiceContext,
+): Promise<CustomerProfile[]> => {
   try {
     const { data: profilesResponse } = await axios.get<ProfileAPIRes>(
       URLS.PROFILE_API_URL,
+      {
+        headers: {
+          authorization: context.authorization,
+        },
+      },
     );
     if (profilesResponse.success) {
       const profiles = profilesResponse.data as ProfileDto[];
@@ -33,10 +43,19 @@ const profiles = async (): Promise<CustomerProfile[]> => {
     );
   }
 };
-const profile = async (_: never, args: QueryProfileArgs) => {
+const profile = async (
+  _: never,
+  args: QueryProfileArgs,
+  context: BankServiceContext,
+) => {
   try {
     const profileResponse = await axios.get<ProfileAPIRes>(
       `${URLS.PROFILE_API_URL}/${args.userId}`,
+      {
+        headers: {
+          authorization: context.authorization,
+        },
+      },
     );
     if (profileResponse.status === 404 || !profileResponse.data.success)
       throw new Error();
@@ -50,10 +69,17 @@ const profile = async (_: never, args: QueryProfileArgs) => {
 };
 const accounts = async (
   profile: CustomerProfile,
+  _: never,
+  context: BankServiceContext,
 ): Promise<AccountInternal[]> => {
   try {
     const { data: accountsResponse } = await axios.get<AccountAPIRes>(
       `${URLS.ACCOUNT_API_URL}/user/${profile.userId}`,
+      {
+        headers: {
+          authorization: context.authorization,
+        },
+      },
     );
     if (accountsResponse.success) {
       const accounts = accountsResponse.data as AccountDto[];
@@ -73,19 +99,28 @@ const accounts = async (
 const createProfile = async (
   _: never,
   { input: { email, name, address, dob, phone } }: MutationCreateProfileArgs,
+  context: BankServiceContext,
 ) => {
   try {
     const profileResponse = await axios.post<
       ProfileAPIRes,
       AxiosResponse<ProfileAPIRes>,
       CreateProfileDto
-    >(URLS.PROFILE_API_URL, {
-      name,
-      email,
-      address,
-      dob,
-      phone,
-    });
+    >(
+      URLS.PROFILE_API_URL,
+      {
+        name,
+        email,
+        address,
+        dob,
+        phone,
+      },
+      {
+        headers: {
+          authorization: context.authorization,
+        },
+      },
+    );
     if (!profileResponse.data.success) throw new Error();
     const newProfile = profileResponse.data.data as ProfileDto;
     return profileMapper(newProfile);
