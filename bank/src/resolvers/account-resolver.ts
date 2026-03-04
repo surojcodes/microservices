@@ -95,7 +95,9 @@ const profile = async (
 //#region Mutations
 const createAccount = async (
   _: never,
-  { input: { accountType, userId, balance } }: MutationCreateAccountArgs,
+  {
+    input: { accountType, userId, balance, accountNickname },
+  }: MutationCreateAccountArgs,
   context: BankServiceContext,
 ) => {
   try {
@@ -109,6 +111,7 @@ const createAccount = async (
         accountType,
         userId,
         balance: balance ?? 0,
+        accountNickname: accountNickname ?? "",
       },
       {
         headers: {

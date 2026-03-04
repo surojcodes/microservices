@@ -38,6 +38,7 @@ export interface CreateAccountDto {
   userId: string;
   accountType: AccountType;
   balance: number;
+  accountNickname?: string;
 }
 export enum AccountStatus {
   ACTIVE = "ACTIVE",
