@@ -11,7 +11,7 @@ const accountRouter = express.Router();
 accountRouter
   .route("/")
   .get(authenticateRequest, getAccounts)
-  .post(createAccount);
+  .post(authenticateRequest, createAccount);
 accountRouter.route("/:id").get(authenticateRequest, getAccount);
 accountRouter.route("/user/:id").get(authenticateRequest, getUserAccounts);
 
