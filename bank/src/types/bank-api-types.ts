@@ -8,6 +8,6 @@ export enum UserRole {
   ADMIN = "ADMIN",
 }
 export interface BankServiceContext {
-  user: JwtClaims | string;
+  user: JwtClaims;
   authorization: string;
 }

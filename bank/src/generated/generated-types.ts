@@ -39,7 +39,7 @@ export type CreateAccountInput = {
   accountNickname?: InputMaybe<Scalars['String']['input']>;
   accountType: AccountType;
   balance?: InputMaybe<Scalars['Float']['input']>;
-  userId: Scalars['String']['input'];
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Mutation = {

@@ -15,6 +15,7 @@ import {
 } from "../types/downstream-types";
 import { accountMapper, profileMapper } from "../mappers/mapper";
 import { BankServiceContext } from "../types/bank-api-types";
+import { UserUtils } from "../utils/user-utils";
 
 //#region Queries
 const accounts = async (
@@ -100,6 +101,10 @@ const createAccount = async (
   }: MutationCreateAccountArgs,
   context: BankServiceContext,
 ) => {
+  if (userId && !UserUtils.isAdmin(context.user)) {
+    throw new Error("Only admins can specify userId when creating an account");
+  }
+  userId = userId ?? context.user.user_id; // Default to the authenticated user's ID if not provided
   try {
     const accountResponse = await axios.post<
       AccountAPIRes,

@@ -9,9 +9,21 @@ type Account {
 }
 
 input CreateAccountInput {
+  """
+  accountType is required and must be either SAVINGS or CHECKING.
+  """
   accountType: AccountType!
+  """
+  Initial balance is optional and defaults to 0. If provided, it must be a non-negative value.
+  """
   balance: Float
-  userId: String!
+  """
+  userID is optional and can only be specified by admins. If not provided, the account will be created for the authenticated user.
+  """
+  userId: String
+  """
+  Account nickname is optional and can be used to give a friendly name to the account.
+  """
   accountNickname: String
 }
 
