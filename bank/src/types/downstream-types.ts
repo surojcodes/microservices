@@ -44,11 +44,3 @@ export enum AccountStatus {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
 }
-
-export interface CreateProfileDto {
-  name: string;
-  email: string;
-  dob: string;
-  phone: string;
-  address: string;
-}

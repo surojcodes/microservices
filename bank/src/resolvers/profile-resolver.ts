@@ -1,14 +1,12 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import {
   Profile as CustomerProfile,
-  MutationCreateProfileArgs,
   QueryProfileArgs,
 } from "../generated/generated-types";
 import {
   AccountAPIRes,
   AccountDto,
   AccountInternal,
-  CreateProfileDto,
   ProfileAPIRes,
   ProfileDto,
 } from "../types/downstream-types";
@@ -95,43 +93,5 @@ const accounts = async (
 };
 //#endregion
 
-//#region Mutation
-const createProfile = async (
-  _: never,
-  { input: { email, name, address, dob, phone } }: MutationCreateProfileArgs,
-  context: BankServiceContext,
-) => {
-  try {
-    const profileResponse = await axios.post<
-      ProfileAPIRes,
-      AxiosResponse<ProfileAPIRes>,
-      CreateProfileDto
-    >(
-      URLS.PROFILE_API_URL,
-      {
-        name,
-        email,
-        address,
-        dob,
-        phone,
-      },
-      {
-        headers: {
-          authorization: context.authorization,
-        },
-      },
-    );
-    if (!profileResponse.data.success) throw new Error();
-    const newProfile = profileResponse.data.data as ProfileDto;
-    return profileMapper(newProfile);
-  } catch (ex) {
-    throw new Error(
-      "Unable to create profile :: " + ex.response?.data?.message || ex.message,
-    );
-  }
-};
-//#endregion
-
 export const ProfileQuery = { profiles, profile };
 export const Profile = { accounts };
-export const ProfileMutation = { createProfile };

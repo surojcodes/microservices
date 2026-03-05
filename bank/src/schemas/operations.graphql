@@ -6,5 +6,4 @@ type Query {
 }
 type Mutation {
   createAccount(input: CreateAccountInput!): Account!
-  createProfile(input: CreateProfileInput!): Profile!
 }

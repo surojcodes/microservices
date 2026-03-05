@@ -42,28 +42,14 @@ export type CreateAccountInput = {
   userId: Scalars['String']['input'];
 };
 
-export type CreateProfileInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  dob?: InputMaybe<Scalars['String']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  phone?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   createAccount: Account;
-  createProfile: Profile;
 };
 
 
 export type MutationCreateAccountArgs = {
   input: CreateAccountInput;
-};
-
-
-export type MutationCreateProfileArgs = {
-  input: CreateProfileInput;
 };
 
 export type Profile = {

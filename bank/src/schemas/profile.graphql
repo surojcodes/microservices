@@ -7,11 +7,3 @@ type Profile {
   address: String
   accounts: [Account!]
 }
-
-input CreateProfileInput {
-  name: String
-  email: String
-  dob: String
-  phone: String
-  address: String
-}
