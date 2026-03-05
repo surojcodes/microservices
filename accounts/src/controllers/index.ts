@@ -7,6 +7,7 @@ import {
 } from "../models";
 import { validateCreateAccount } from "../utils/validation-utils";
 import { prisma, getPrismaErrorMessage } from "../utils/prisma";
+import { AuthenticatedRequest } from "../middleware/auth";
 
 //TODO : ONLY ADMIN CAN GET ANYONE'S ACCOUNT, USER CAN ONLY GET HIS/HER ACCOUNT. IMPLEMENT AUTHORIZATION LOGIC
 export const getAccounts = async (
@@ -79,7 +80,6 @@ export const getAccount = async (
   }
 };
 
-//TODO : ADMIN CAN ONLY GET ANYONE'S ACCOUNT, USER CAN ONLY GET HIS/HER ACCOUNT. IMPLEMENT AUTHORIZATION LOGIC
 export const getUserAccounts = async (
   req: Request<{ id: string }>,
   res: Response<AccountAPIRes>,
@@ -121,7 +121,8 @@ export const createAccount = async (
   res: Response<AccountAPIRes>,
 ) => {
   const reqBody = req.body;
-  const validation = validateCreateAccount(reqBody);
+  const loggedUser = (req as unknown as AuthenticatedRequest).user;
+  const validation = validateCreateAccount(reqBody, loggedUser);
   if (!validation.success) {
     return res.status(400).json({
       success: false,
