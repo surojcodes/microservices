@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { UserRole } from "../utils/validation-utils";
 
 export interface AuthenticatedRequest extends Request {
   user?: JwtPayload & { user_id: string; username: string; role: string };
@@ -26,4 +27,14 @@ export const authenticateRequest = (
   } catch (err) {
     return res.status(401).json({ success: false, message: "INVALID_TOKEN" });
   }
+};
+export const adminOnly = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (req.user?.role !== UserRole.ADMIN) {
+    return res.status(403).json({ success: false, message: "FORBIDDEN" });
+  }
+  next();
 };

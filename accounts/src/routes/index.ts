@@ -5,7 +5,7 @@ import {
   getAccounts,
   getUserAccounts,
 } from "../controllers";
-import { authenticateRequest } from "../middleware/auth";
+import { adminOnly, authenticateRequest } from "../middleware/auth";
 
 const accountRouter = express.Router();
 accountRouter
@@ -13,6 +13,8 @@ accountRouter
   .get(authenticateRequest, getAccounts)
   .post(authenticateRequest, createAccount);
 accountRouter.route("/:id").get(authenticateRequest, getAccount);
-accountRouter.route("/user/:id").get(authenticateRequest, getUserAccounts);
+accountRouter
+  .route("/user/:id")
+  .get(authenticateRequest, adminOnly, getUserAccounts);
 
 export default accountRouter;

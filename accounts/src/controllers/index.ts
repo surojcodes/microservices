@@ -107,6 +107,7 @@ export const getAccount = async (
   }
 };
 
+//ADMIN ONLY ENDPOINT TO GET ALL ACCOUNTS OF A USER, USER CAN ONLY GET HIS/HER OWN ACCOUNTS.
 export const getUserAccounts = async (
   req: Request<{ id: string }>,
   res: Response<AccountAPIRes>,
