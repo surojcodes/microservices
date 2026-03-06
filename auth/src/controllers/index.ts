@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   AuthAPIRes,
+  JwtClaims,
   LoginUserInput,
   RegisterUserInput,
   UserRole,
@@ -11,6 +12,11 @@ import {
 } from "../utils/validation-utils";
 import { getPrismaErrorMessage, prisma } from "../utils/prisma";
 import { hashPassword, isValidPassword, signJWT } from "../utils/auth-utils";
+import jwt, { JwtPayload } from "jsonwebtoken";
+
+interface AuthenticatedRequest extends Request {
+  user?: JwtPayload & { sub: string; username: string; role: string };
+}
 
 export const login = async (
   req: Request<never, never, LoginUserInput>,
@@ -148,6 +154,34 @@ export const register = async (
     return res.status(status).json({
       success: false,
       message,
+    });
+  }
+};
+
+export const getUser = async (req: Request, res: Response<AuthAPIRes>) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET!) as JwtClaims;
+    return res.json({
+      success: true,
+      data: {
+        user_id: payload.user_id,
+        username: payload.username,
+        role: payload.role,
+        token,
+      },
+    });
+  } catch (err) {
+    console.error("Error verifying JWT in getUser:", err);
+    return res.status(401).json({
+      success: false,
+      message: "Invalid token",
     });
   }
 };
