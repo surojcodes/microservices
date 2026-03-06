@@ -91,6 +91,31 @@ const profile = async (
     );
   }
 };
+const accountsByUserId = async (
+  _: never,
+  { userId }: { userId: string },
+  context: BankServiceContext,
+): Promise<AccountInternal[]> => {
+  if (!UserUtils.isAdmin(context.user)) {
+    throw new Error("Only admins can fetch accounts by user ID");
+  }
+  try {
+    const accountsResponse = await axios.get<AccountAPIRes>(
+      `${URLS.ACCOUNT_API_URL}/user/${userId}`,
+      {
+        headers: {
+          authorization: context.authorization,
+        },
+      },
+    );
+    if (accountsResponse.status === 404 || !accountsResponse.data.success)
+      throw new Error();
+    const accounts = accountsResponse.data.data as AccountDto[];
+    return accounts.map((account) => accountMapper(account));
+  } catch (ex) {
+    throw new Error("Unable to fetch account by user ID :: " + ex.message);
+  }
+};
 //#endregion
 
 //#region Mutations
@@ -135,6 +160,6 @@ const createAccount = async (
 };
 //#endregion
 
-export const AccountQuery = { accounts, account };
+export const AccountQuery = { accounts, account, accountsByUserId };
 export const Account = { profile };
 export const AccountMutation = { createAccount };
