@@ -70,10 +70,11 @@ export type Profile = {
 export type Query = {
   __typename?: 'Query';
   account?: Maybe<Account>;
-  /** ADMIN ONLY */
-  accountByUserId?: Maybe<Account>;
   accounts: Array<Account>;
+  /** ADMIN ONLY */
+  accountsByUserId?: Maybe<Array<Account>>;
   profile?: Maybe<Profile>;
+  /** ADMIN ONLY */
   profiles: Array<Profile>;
 };
 
@@ -83,7 +84,7 @@ export type QueryAccountArgs = {
 };
 
 
-export type QueryAccountByUserIdArgs = {
+export type QueryAccountsByUserIdArgs = {
   userId: Scalars['String']['input'];
 };
 

@@ -1,12 +1,15 @@
 type Query {
   accounts: [Account!]!
-  profiles: [Profile!]!
   account(accountNumber: String!): Account
+  profile(userId: String): Profile
+  """
+  ADMIN ONLY
+  """
+  profiles: [Profile!]!
   """
   ADMIN ONLY
   """
   accountsByUserId(userId: String!): [Account!]
-  profile(userId: String): Profile
 }
 type Mutation {
   createAccount(input: CreateAccountInput!): Account!
