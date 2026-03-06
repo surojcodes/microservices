@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { ProfileAPIRes } from "../models";
+import { ProfileAPIRes, UserRole } from "../models";
 import { getPrismaErrorMessage, prisma } from "../utils/prisma";
+import { AuthenticatedRequest } from "../middleware/auth";
 export const getProfiles = async (
   req: Request,
   res: Response<ProfileAPIRes>,
@@ -27,22 +28,32 @@ export const getProfiles = async (
   }
 };
 
+/*
+ * Admin can get any profile by user id, regular users can only get their own profile
+ */
 export const getProfile = async (
-  req: Request<{ id: string }>,
+  req: AuthenticatedRequest,
   res: Response<ProfileAPIRes>,
 ) => {
-  const { id } = req.params;
-
+  const requestedUserId = req.params.id as string;
+  const loggedInUserId = req.user?.user_id;
+  const requesterRole = req.user?.role;
+  if (requesterRole !== UserRole.ADMIN && loggedInUserId !== requestedUserId) {
+    return res
+      .status(403)
+      .json({ success: false, message: "Forbidden: Access denied" });
+  }
   try {
     const profile = await prisma.profile.findUnique({
       where: {
-        user_id: id,
+        user_id: requestedUserId,
       },
     });
     if (!profile) {
-      return res
-        .status(404)
-        .json({ success: false, message: `Profile with id ${id} not found` });
+      return res.status(404).json({
+        success: false,
+        message: `Profile with id ${requestedUserId} not found`,
+      });
     }
     res.json({
       success: true,
