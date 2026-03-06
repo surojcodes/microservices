@@ -50,6 +50,13 @@ const profile = async (
   args: QueryProfileArgs,
   context: BankServiceContext,
 ) => {
+  args.userId = args.userId || context.user?.user_id;
+  if (
+    !UserUtils.isAdmin(context.user) &&
+    context.user?.user_id !== args.userId
+  ) {
+    throw new Error("Only admins can get any profile");
+  }
   try {
     const profileResponse = await axios.get<ProfileAPIRes>(
       `${URLS.PROFILE_API_URL}/${args.userId}`,
