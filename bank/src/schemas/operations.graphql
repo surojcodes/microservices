@@ -1,6 +1,15 @@
 type Query {
+  """
+  ADMIN CAN GET ALL ACCOUNTS, NON-ADMIN CAN ONLY GET ACCOUNTS FOR THEMSELVES
+  """
   accounts: [Account!]!
+  """
+  ADMIN can specify userId, NON-ADMIN CAN ONLY GET ACCOUNTS FOR THEMSELVES
+  """
   account(accountNumber: String!): Account
+  """
+  ADMIN CAN GET ALL PROFILES, NON-ADMIN CAN ONLY GET THEIR OWN PROFILE
+  """
   profile(userId: String): Profile
   """
   ADMIN ONLY
@@ -12,5 +21,8 @@ type Query {
   accountsByUserId(userId: String!): [Account!]
 }
 type Mutation {
+  """
+  ADMIN CAN SPECIFY userId, NON-ADMIN CAN ONLY CREATE ACCOUNT FOR THEMSELVES
+  """
   createAccount(input: CreateAccountInput!): Account!
 }
