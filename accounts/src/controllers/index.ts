@@ -9,7 +9,10 @@ import { UserRole, validateCreateAccount } from "../utils/validation-utils";
 import { prisma, getPrismaErrorMessage } from "../utils/prisma";
 import { AuthenticatedRequest } from "../middleware/auth";
 import { AccountModel } from "../generated/prisma/models";
-
+/*
+ *ADMINS GET ALL ACCOUNTS
+ *USER GETS HIS/HER OWN ACCOUNTS
+ */
 export const getAccounts = async (
   req: AuthenticatedRequest,
   res: Response<AccountAPIRes>,
@@ -49,13 +52,16 @@ export const getAccounts = async (
   }
 };
 
+/*
+ * Takes in account number as path param, if user is admin, can access any account,
+ * if user is normal user, can only access his/her own account, else return 403 forbidden
+ */
 export const getAccount = async (
   req: AuthenticatedRequest,
   res: Response<AccountAPIRes>,
 ) => {
   const accountNumber = req.params.id as string;
   if (req.user?.role !== UserRole.ADMIN) {
-    // Regular users can only access their own accounts
     const account = await prisma.account.findUnique({
       where: {
         account_number: Number(accountNumber),
@@ -107,7 +113,9 @@ export const getAccount = async (
   }
 };
 
-//ADMIN ONLY ENDPOINT TO GET ALL ACCOUNTS OF A USER, USER CAN ONLY GET HIS/HER OWN ACCOUNTS.
+/*
+ * ADMIN ONLY ENDPOINT TO GET ALL ACCOUNTS OF A USER, USER CAN ONLY GET HIS/HER OWN ACCOUNTS.
+ */
 export const getUserAccounts = async (
   req: Request<{ id: string }>,
   res: Response<AccountAPIRes>,
@@ -143,7 +151,9 @@ export const getUserAccounts = async (
   }
 };
 
-//TODO : ONLY ADMIN CAN CREATE ACCOUNT FOR ANY USER, USER CAN ONLY CREATE ACCOUNT FOR HIM/HERSELF. IMPLEMENT AUTHORIZATION LOGIC
+/*
+ * ONLY ADMIN CAN CREATE ACCOUNT FOR ANY USER, USER CAN ONLY CREATE ACCOUNT FOR HIM/HERSELF. IMPLEMENT AUTHORIZATION LOGIC
+ */
 export const createAccount = async (
   req: Request<never, never, CreateAccountDto>,
   res: Response<AccountAPIRes>,
