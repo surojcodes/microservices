@@ -49,14 +49,32 @@ export const getAccounts = async (
   }
 };
 
-//TODO : ADMIN CAN ONLY GET ANYONE'S ACCOUNT, USER CAN ONLY GET HIS/HER ACCOUNT. IMPLEMENT AUTHORIZATION LOGIC
 export const getAccount = async (
-  req: Request<{ id: string }>,
+  req: AuthenticatedRequest,
   res: Response<AccountAPIRes>,
 ) => {
-  const { id } = req.params;
+  const accountNumber = req.params.id as string;
+  if (req.user?.role !== UserRole.ADMIN) {
+    // Regular users can only access their own accounts
+    const account = await prisma.account.findUnique({
+      where: {
+        account_number: Number(accountNumber),
+      },
+    });
+    if (!account)
+      return res.status(404).json({
+        success: false,
+        message: `Account with id ${accountNumber} not found`,
+      });
+    if (account.user_id !== req.user?.user_id) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden to access other user's account",
+      });
+    }
+  }
   try {
-    const accountId = Number(id);
+    const accountId = Number(accountNumber);
     const account = await prisma.account.findUnique({
       where: {
         account_number: accountId,
@@ -65,7 +83,7 @@ export const getAccount = async (
     if (!account)
       return res.status(404).json({
         success: false,
-        message: `Account with id ${id} not found`,
+        message: `Account with id ${accountNumber} not found`,
       });
     res.json({
       success: true,
@@ -80,7 +98,7 @@ export const getAccount = async (
       },
     });
   } catch (err) {
-    console.error(`Error fetching account with id ${id}:`, err);
+    console.error(`Error fetching account with id ${accountNumber}:`, err);
     const { status, message } = getPrismaErrorMessage(err);
     res.status(status).json({
       success: false,
