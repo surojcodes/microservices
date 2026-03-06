@@ -13,6 +13,7 @@ import {
 import { URLS } from "../config";
 import { accountMapper, profileMapper } from "../mappers/mapper";
 import { BankServiceContext } from "../types/bank-api-types";
+import { UserUtils } from "../utils/user-utils";
 
 //#region Query
 const profiles = async (
@@ -20,6 +21,9 @@ const profiles = async (
   __: never,
   context: BankServiceContext,
 ): Promise<CustomerProfile[]> => {
+  if (!UserUtils.isAdmin(context.user)) {
+    throw new Error("Only admins can get all profiles");
+  }
   try {
     const { data: profilesResponse } = await axios.get<ProfileAPIRes>(
       URLS.PROFILE_API_URL,
