@@ -11,3 +11,7 @@ export interface ProfileAPIRes {
   data?: ProfileDto | ProfileDto[];
   message?: string;
 }
+export enum UserRole {
+  USER = "USER",
+  ADMIN = "ADMIN",
+}
