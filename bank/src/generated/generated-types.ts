@@ -36,9 +36,13 @@ export enum AccountType {
 }
 
 export type CreateAccountInput = {
+  /** Account nickname is optional and can be used to give a friendly name to the account. */
   accountNickname?: InputMaybe<Scalars['String']['input']>;
+  /** accountType is required and must be either SAVINGS or CHECKING. */
   accountType: AccountType;
+  /** Initial balance is optional and defaults to 0. If provided, it must be a non-negative value. */
   balance?: InputMaybe<Scalars['Float']['input']>;
+  /** userID is optional and can only be specified by admins. If not provided, the account will be created for the authenticated user. */
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -73,7 +77,7 @@ export type Query = {
 
 
 export type QueryAccountArgs = {
-  accountNumber?: InputMaybe<Scalars['String']['input']>;
+  accountNumber: Scalars['String']['input'];
 };
 
 

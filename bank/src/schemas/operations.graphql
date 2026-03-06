@@ -1,7 +1,7 @@
 type Query {
   accounts: [Account!]!
   profiles: [Profile!]!
-  account(accountNumber: String): Account
+  account(accountNumber: String!): Account
   profile(userId: String): Profile
 }
 type Mutation {
