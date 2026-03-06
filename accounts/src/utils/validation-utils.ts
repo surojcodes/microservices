@@ -1,4 +1,3 @@
-import { log } from "node:console";
 import { AccountType } from "../models";
 
 export interface ValidationResponse {

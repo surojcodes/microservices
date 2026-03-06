@@ -5,17 +5,26 @@ import {
   AccountType,
   CreateAccountDto,
 } from "../models";
-import { validateCreateAccount } from "../utils/validation-utils";
+import { UserRole, validateCreateAccount } from "../utils/validation-utils";
 import { prisma, getPrismaErrorMessage } from "../utils/prisma";
 import { AuthenticatedRequest } from "../middleware/auth";
+import { AccountModel } from "../generated/prisma/models";
 
-//TODO : ONLY ADMIN CAN GET ANYONE'S ACCOUNT, USER CAN ONLY GET HIS/HER ACCOUNT. IMPLEMENT AUTHORIZATION LOGIC
 export const getAccounts = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response<AccountAPIRes>,
 ) => {
   try {
-    const accounts = await prisma.account.findMany();
+    let accounts: AccountModel[] = [];
+    if (req.user?.role === UserRole.ADMIN) {
+      accounts = await prisma.account.findMany();
+    } else {
+      accounts = await prisma.account.findMany({
+        where: {
+          user_id: req.user?.user_id,
+        },
+      });
+    }
     res.status(200).json({
       success: true,
       data: accounts.map((account) => {
