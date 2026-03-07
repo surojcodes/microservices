@@ -14,3 +14,10 @@ spec:
                 name: bank-service
                 port:
                   number: 4000
+          - pathType: Prefix
+            path: "/auth"
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 5000
