@@ -8,7 +8,7 @@ spec:
     - http:
         paths:
           - pathType: Exact
-            path: "/graphql"
+            path: "/bank"
             backend:
               service:
                 name: bank-service
