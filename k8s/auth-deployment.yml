@@ -22,7 +22,7 @@ spec:
             - name: PORT
               value: "5000"
             - name: APP_DATABASE_URL
-              value: "postgresql://appuser:apppass@app-db--service:5432/app_db"
+              value: "postgresql://appuser:apppass@app-db-service:5432/app_db"
             - name: JWT_SECRET
               value: "abasiccatdangerouslyelopedinthemorning"
             - name: JWT_EXPIRES_IN
