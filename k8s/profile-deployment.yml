@@ -22,9 +22,15 @@ spec:
             - name: PORT
               value: "3000"
             - name: APP_DATABASE_URL
-              value: "postgresql://appuser:apppass@app-db-service:5432/app_db"
+              valueFrom:
+                secretKeyRef:
+                  name: bank-secrets
+                  key: APP_DATABASE_URL
             - name: JWT_SECRET
-              value: "abasiccatdangerouslyelopedinthemorning"
+              valueFrom:
+                secretKeyRef:
+                  name: bank-secrets
+                  key: JWT_SECRET
           resources:
             requests:
               memory: "128Mi"

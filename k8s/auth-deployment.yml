@@ -22,9 +22,15 @@ spec:
             - name: PORT
               value: "5000"
             - name: APP_DATABASE_URL
-              value: "postgresql://appuser:apppass@app-db-service:5432/app_db"
+              valueFrom:
+                secretKeyRef:
+                  name: bank-secrets
+                  key: APP_DATABASE_URL
             - name: JWT_SECRET
-              value: "abasiccatdangerouslyelopedinthemorning"
+              valueFrom:
+                secretKeyRef:
+                  name: bank-secrets
+                  key: JWT_SECRET
             - name: JWT_EXPIRES_IN
               value: "1h"
             - name: NODE_ENV
