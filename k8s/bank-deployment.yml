@@ -18,6 +18,20 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 4000
+          livenessProbe:
+            httpGet:
+              port: 4000
+              path: /health
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 4000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
           env:
             - name: PORT
               valueFrom:
