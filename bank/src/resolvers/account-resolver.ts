@@ -16,6 +16,7 @@ import {
 import { accountMapper, profileMapper } from "../mappers/mapper";
 import { BankServiceContext } from "../types/bank-api-types";
 import { UserUtils } from "../utils/user-utils";
+import logger from "../logger";
 
 //#region Queries
 const accounts = async (
@@ -36,10 +37,13 @@ const accounts = async (
       const accounts = accountsResponse.data as AccountDto[];
       return accounts.map((account) => accountMapper(account));
     } else {
+      logger.error(
+        "Failed to fetch accounts: API responded with success=false",
+      );
       throw new Error();
     }
   } catch (ex) {
-    console.error("Error fetching accounts:", ex); // Debug log
+    logger.error(ex, "Error fetching accounts:");
     throw new Error(
       "Unable to fetch accounts :: " + ex.response?.data?.message || ex.message,
     );
@@ -59,11 +63,16 @@ const account = async (
         },
       },
     );
-    if (accountResponse.status === 404 || !accountResponse.data.success)
+    if (accountResponse.status === 404 || !accountResponse.data.success) {
+      logger.error(
+        `Failed to fetch account ${args.accountNumber}: API responded with success=false`,
+      );
       throw new Error();
+    }
     const account = accountResponse.data;
     return accountMapper(account.data as AccountDto);
   } catch (ex) {
+    logger.error(ex, `Error fetching account ${args.accountNumber}:`);
     throw new Error("Unable to fetch account :: " + ex.message);
   }
 };
@@ -81,11 +90,16 @@ const profile = async (
         },
       },
     );
-    if (profileResponse.status === 404 || !profileResponse.data.success)
+    if (profileResponse.status === 404 || !profileResponse.data.success) {
+      logger.error(
+        `Failed to fetch profile for user ${account.userId}: API responded with success=false`,
+      );
       throw new Error();
+    }
     const profile = profileResponse.data;
     return profileMapper(profile.data as ProfileDto);
   } catch (ex) {
+    logger.error(ex, `Error fetching profile for user ${account.userId}:`);
     throw new Error(
       "Unable to fetch profile :: " + ex.response?.data?.message || ex.message,
     );
@@ -97,6 +111,7 @@ const accountsByUserId = async (
   context: BankServiceContext,
 ): Promise<AccountInternal[]> => {
   if (!UserUtils.isAdmin(context.user)) {
+    logger.error("Only admins can fetch accounts by user ID");
     throw new Error("Only admins can fetch accounts by user ID");
   }
   try {
@@ -108,11 +123,16 @@ const accountsByUserId = async (
         },
       },
     );
-    if (accountsResponse.status === 404 || !accountsResponse.data.success)
+    if (accountsResponse.status === 404 || !accountsResponse.data.success) {
+      logger.error(
+        `Failed to fetch accounts for user ${userId}: API responded with success=false`,
+      );
       throw new Error();
+    }
     const accounts = accountsResponse.data.data as AccountDto[];
     return accounts.map((account) => accountMapper(account));
   } catch (ex) {
+    logger.error(ex, `Error fetching accounts for user ${userId}:`);
     throw new Error("Unable to fetch account by user ID :: " + ex.message);
   }
 };
@@ -127,6 +147,7 @@ const createAccount = async (
   context: BankServiceContext,
 ) => {
   if (userId && !UserUtils.isAdmin(context.user)) {
+    logger.error("Only admins can specify userId when creating an account");
     throw new Error("Only admins can specify userId when creating an account");
   }
   userId = userId ?? context.user.user_id; // Default to the authenticated user's ID if not provided
@@ -149,10 +170,16 @@ const createAccount = async (
         },
       },
     );
-    if (!accountResponse.data.success) throw new Error();
+    if (!accountResponse.data.success) {
+      logger.error(
+        "Failed to create account: API responded with success=false",
+      );
+      throw new Error();
+    }
     const newAccount = accountResponse.data.data as AccountDto;
     return accountMapper(newAccount);
   } catch (ex) {
+    logger.error(ex, "Error creating account:");
     throw new Error(
       "Unable to create account :: " + ex.response?.data?.message || ex.message,
     );

@@ -11,12 +11,6 @@
   "keywords": [],
   "author": "surojcodes@gmail.com",
   "license": "ISC",
-  "devDependencies": {
-    "@types/cookie-parser": "^1.4.10",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^25.2.3",
-    "typescript": "^5.9.3"
-  },
   "dependencies": {
     "@apollo/server": "^5.4.0",
     "@as-integrations/express5": "^1.1.2",
@@ -31,6 +25,14 @@
     "express": "^5.2.1",
     "graphql": "^16.12.0",
     "jsonwebtoken": "^9.0.3",
-    "pino": "^10.3.1"
+    "pino": "^10.3.1",
+    "pino-http": "^11.0.0"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.2.3",
+    "typescript": "^5.9.3",
+    "pino-pretty": "^13.1.3"
   }
 }

@@ -9,6 +9,8 @@ import { authenticateRequest } from "./middleware/auth";
 import { BankServiceContext } from "./types/bank-api-types";
 import cookieParser from "cookie-parser";
 import healthRouter from "./router/health";
+import logger from "./logger";
+import PinoHttp from "pino-http";
 
 const app = express();
 
@@ -20,6 +22,7 @@ const apolloServer = new ApolloServer<BankServiceContext>({
 });
 
 app.use("/", healthRouter);
+app.use(PinoHttp(logger));
 
 async function startExpressServer() {
   await apolloServer.start();
@@ -38,7 +41,7 @@ async function startExpressServer() {
     }),
   );
   app.listen(PORT, () => {
-    console.log(`
+    logger.info(`
       Express Server running at localhost:${PORT}
       Graphql Server running at localhost:${PORT}/bank
       `);

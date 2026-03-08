@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import logger from "../logger";
 
 interface AuthenticatedRequest extends Request {
   user?: JwtPayload & { user_id: string; username: string; role: string };
@@ -13,6 +14,7 @@ export const authenticateRequest = (
 ) => {
   const authHeader = req.headers["authorization"];
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    logger.error("Missing or malformed Authorization header");
     return res.status(401).json({ success: false, message: "UNAUTHORIZED" });
   }
   const token = authHeader.split(" ")[1];
@@ -24,6 +26,7 @@ export const authenticateRequest = (
     req.user = payload; // attach user info to req
     next();
   } catch (err) {
+    logger.error(err, "Error verifying JWT:");
     return res.status(401).json({ success: false, message: "INVALID_TOKEN" });
   }
 };
