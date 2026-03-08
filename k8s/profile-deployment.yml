@@ -20,7 +20,10 @@ spec:
             - containerPort: 3000
           env:
             - name: PORT
-              value: "3000"
+              valueFrom:
+                configMapKeyRef:
+                  name: bank-config
+                  key: PROFILE_PORT
             - name: APP_DATABASE_URL
               valueFrom:
                 secretKeyRef:

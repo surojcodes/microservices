@@ -20,11 +20,20 @@ spec:
             - containerPort: 4000
           env:
             - name: PORT
-              value: "4000"
+              valueFrom:
+                configMapKeyRef:
+                  name: bank-config
+                  key: BANK_PORT
             - name: ACCOUNT_API_HOST
-              value: account-service
+              valueFrom:
+                configMapKeyRef:
+                  name: bank-config
+                  key: ACCOUNT_API_HOST
             - name: PROFILE_API_HOST
-              value: profile-service
+              valueFrom:
+                configMapKeyRef:
+                  name: bank-config
+                  key: PROFILE_API_HOST
             - name: APP_DATABASE_URL
               valueFrom:
                 secretKeyRef:
