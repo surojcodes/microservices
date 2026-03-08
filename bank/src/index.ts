@@ -8,6 +8,7 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import { authenticateRequest } from "./middleware/auth";
 import { BankServiceContext } from "./types/bank-api-types";
 import cookieParser from "cookie-parser";
+import healthRouter from "./router/health";
 
 const app = express();
 
@@ -17,6 +18,8 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 const apolloServer = new ApolloServer<BankServiceContext>({
   schema,
 });
+
+app.use("/", healthRouter);
 
 async function startExpressServer() {
   await apolloServer.start();
