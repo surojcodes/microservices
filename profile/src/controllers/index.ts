@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { ProfileAPIRes, UserRole } from "../models";
 import { getPrismaErrorMessage, prisma } from "../utils/prisma";
 import { AuthenticatedRequest } from "../middleware/auth";
+import logger from "../logger";
 export const getProfiles = async (
   req: Request,
   res: Response<ProfileAPIRes>,
@@ -22,7 +23,7 @@ export const getProfiles = async (
       }),
     });
   } catch (err) {
-    console.error("Error fetching profiles:", err);
+    logger.error(err, "Error fetching profiles:");
     const { status, message } = getPrismaErrorMessage(err);
     res.status(status).json({ success: false, message });
   }
@@ -39,6 +40,9 @@ export const getProfile = async (
   const loggedInUserId = req.user?.user_id;
   const requesterRole = req.user?.role;
   if (requesterRole !== UserRole.ADMIN && loggedInUserId !== requestedUserId) {
+    logger.error(
+      `User ${loggedInUserId} with role ${requesterRole} attempted to access profile of user ${requestedUserId}`,
+    );
     return res
       .status(403)
       .json({ success: false, message: "Forbidden: Access denied" });
@@ -50,6 +54,7 @@ export const getProfile = async (
       },
     });
     if (!profile) {
+      logger.error(`Profile with id ${requestedUserId} not found`);
       return res.status(404).json({
         success: false,
         message: `Profile with id ${requestedUserId} not found`,
@@ -67,7 +72,7 @@ export const getProfile = async (
       },
     });
   } catch (err) {
-    console.error(`Error fetching profile`, err);
+    logger.error(err, `Error fetching profile`);
     const { status, message } = getPrismaErrorMessage(err);
     res.status(status).json({ success: false, message });
   }
