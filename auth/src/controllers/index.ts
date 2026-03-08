@@ -13,10 +13,7 @@ import {
 import { getPrismaErrorMessage, prisma } from "../utils/prisma";
 import { hashPassword, isValidPassword, signJWT } from "../utils/auth-utils";
 import jwt, { JwtPayload } from "jsonwebtoken";
-
-interface AuthenticatedRequest extends Request {
-  user?: JwtPayload & { sub: string; username: string; role: string };
-}
+import logger from "../logger";
 
 export const login = async (
   req: Request<never, never, LoginUserInput>,
@@ -42,7 +39,7 @@ export const login = async (
       },
     });
     if (!user) {
-      console.warn(`Login attempt with non-existent username: ${username}`);
+      logger.warn(`Login attempt with non-existent username: ${username}`);
       return res.status(401).json({
         success: false,
         message: "Invalid credentials",
@@ -51,7 +48,7 @@ export const login = async (
 
     const isPasswordValid = await isValidPassword(user.password, password);
     if (!isPasswordValid) {
-      console.warn(
+      logger.warn(
         `Login attempt with invalid password for username: ${username}`,
       );
       return res.status(401).json({
@@ -78,7 +75,7 @@ export const login = async (
       message: "Login successful",
     });
   } catch (err) {
-    console.error("Error logging in user:", err);
+    logger.error(err, "Error logging in user:");
     const { status, message } = getPrismaErrorMessage(err);
     return res.status(status).json({
       success: false,
@@ -149,7 +146,7 @@ export const register = async (
       message: "User registered successfully",
     });
   } catch (err) {
-    console.error("Error registering user:", err);
+    logger.error(err, "Error registering user:");
     const { status, message } = getPrismaErrorMessage(err);
     return res.status(status).json({
       success: false,
@@ -178,7 +175,7 @@ export const getUser = async (req: Request, res: Response<AuthAPIRes>) => {
       },
     });
   } catch (err) {
-    console.error("Error verifying JWT in getUser:", err);
+    logger.error(err, "Error verifying JWT in getUser:");
     return res.status(401).json({
       success: false,
       message: "Invalid token",
