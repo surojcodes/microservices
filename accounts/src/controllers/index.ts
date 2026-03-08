@@ -9,6 +9,7 @@ import { UserRole, validateCreateAccount } from "../utils/validation-utils";
 import { prisma, getPrismaErrorMessage } from "../utils/prisma";
 import { AuthenticatedRequest } from "../middleware/auth";
 import { AccountModel } from "../generated/prisma/models";
+import logger from "../logger";
 /*
  *ADMINS GET ALL ACCOUNTS
  *USER GETS HIS/HER OWN ACCOUNTS
@@ -43,7 +44,7 @@ export const getAccounts = async (
       }),
     });
   } catch (err) {
-    console.error("Error fetching accounts:", err);
+    logger.error(err, "Error fetching accounts:");
     const { status, message } = getPrismaErrorMessage(err);
     res.status(status).json({
       success: false,
@@ -104,7 +105,7 @@ export const getAccount = async (
       },
     });
   } catch (err) {
-    console.error(`Error fetching account with id ${accountNumber}:`, err);
+    logger.error(err, `Error fetching account with id ${accountNumber}:`);
     const { status, message } = getPrismaErrorMessage(err);
     res.status(status).json({
       success: false,
@@ -142,7 +143,7 @@ export const getUserAccounts = async (
       }),
     });
   } catch (err) {
-    console.error(`Error fetching accounts for user with id ${userId}:`, err);
+    logger.error(err, `Error fetching accounts for user with id ${userId}:`);
     const { status, message } = getPrismaErrorMessage(err);
     return res.status(status).json({
       success: false,
@@ -191,7 +192,7 @@ export const createAccount = async (
       },
     });
   } catch (err) {
-    console.error("Error creating account:", err);
+    logger.error(err, "Error creating account:");
     const { status, message } = getPrismaErrorMessage(err);
     res.status(status).json({
       success: false,

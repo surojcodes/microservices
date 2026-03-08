@@ -1,14 +1,15 @@
 import express from "express";
+import logger from "../logger";
 
 const healthRouter = express.Router();
 
 healthRouter.get("/health", (req, res) => {
-  console.log("Health check endpoint called");
+  logger.info("Health check endpoint called");
   res.status(200).send("OK");
 });
 
 healthRouter.get("/ready", (req, res) => {
-  console.log("Ready check endpoint called");
+  logger.info("Ready check endpoint called");
   res.status(200).send("READY");
 });
 
