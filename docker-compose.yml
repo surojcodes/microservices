@@ -7,14 +7,14 @@ services:
       PORT: 3001 #inject this env var in account container
     ports:
       - "${ACCOUNT_HOST_PORT}:3001"
-  customer:
-    build: ./customer
-    image: customer:1.0.0
-    container_name: customer
+  profile:
+    build: ./profile
+    image: profile:1.0.0
+    container_name: profile
     environment:
       PORT: 3000
     ports:
-      - "${CUSTOMER_HOST_PORT}:3000"
+      - "${PROFILE_HOST_PORT}:3000"
   bank:
     build: ./bank
     image: bank:1.0.0
@@ -22,9 +22,9 @@ services:
     environment:
       PORT: 4000
       ACCOUNT_API_HOST: account
-      CUSTOMER_API_HOST: customer
+      PROFILE_API_HOST: profile
     ports:
       - "${BANK_HOST_PORT}:4000"
     depends_on:
       - account
-      - customer
+      - profile
