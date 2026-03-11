@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: account-deployment
+  name: account-pod
+  namespace: sm-banking
 spec:
   replicas: 3
   selector:

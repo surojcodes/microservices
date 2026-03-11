@@ -2,6 +2,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: account-hpa
+  namespace: sm-banking
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

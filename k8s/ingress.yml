@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: bank-ingress
+  namespace: sm-banking
 spec:
   ingressClassName: nginx
   rules:
