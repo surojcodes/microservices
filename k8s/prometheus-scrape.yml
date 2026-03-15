@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sm-banking-services
+  namespace: observability
+  labels:
+    release: prometheus
+spec:
+  namespaceSelector:
+    matchNames:
+      - sm-banking
+  selector:
+    matchLabels:
+      monitored: "true"
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: profile-pod
+  name: profile
   namespace: sm-banking
 spec:
   replicas: 1
