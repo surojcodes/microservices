@@ -1,0 +1,22 @@
+kubectl create namespace observability
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+helm repo list
+
+helm install loki grafana/loki \
+  --namespace observability \
+  --values loki-values.yml
+
+kubectl get pods -n observability -w
+
+helm install alloy grafana/alloy \
+  --namespace observability \
+  --values alloy-values.yml
+
+kubectl get pods -n observability -w
+
+helm install tempo grafana/tempo \
+  --namespace observability \
+  --values grafana-values.yml
+
+kubectl get pods -n observability
