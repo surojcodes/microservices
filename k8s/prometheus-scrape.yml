@@ -13,6 +13,15 @@ spec:
     matchLabels:
       monitored: "true"
   endpoints:
-    - port: http
+    - targetPort: 4000
+      path: /metrics
+      interval: 15s
+    - targetPort: 3001
+      path: /metrics
+      interval: 15s
+    - targetPort: 3000
+      path: /metrics
+      interval: 15s
+    - targetPort: 5000
       path: /metrics
       interval: 15s

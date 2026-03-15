@@ -7,5 +7,6 @@ spec:
   selector:
     app: account
   ports:
-    - port: 3001
+    - name: http
+      port: 3001
       targetPort: 3001
