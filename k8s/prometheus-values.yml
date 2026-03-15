@@ -1,0 +1,28 @@
+# We already have Grafana, so disable the bundled one
+grafana:
+  enabled: false
+
+# Slim down alertmanager for minikube
+alertmanager:
+  alertmanagerSpec:
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: 10m
+
+# Slim down prometheus for minikube
+prometheus:
+  prometheusSpec:
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+    retention: 24h
+    storageSpec: {}
+
+# These scrape your node and cluster metrics automatically
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true

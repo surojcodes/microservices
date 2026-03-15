@@ -8,6 +8,12 @@ datasources:
         type: loki
         url: http://loki-gateway.observability.svc.cluster.local
         access: proxy
+        isDefault: false
+
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-kube-prometheus-prometheus.observability.svc.cluster.local:9090
+        access: proxy
         isDefault: true
 
 service:
