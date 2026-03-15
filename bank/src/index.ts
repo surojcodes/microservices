@@ -11,6 +11,8 @@ import cookieParser from "cookie-parser";
 import healthRouter from "./router/health";
 import logger from "./logger";
 import PinoHttp from "pino-http";
+import { register } from "./metrics";
+import { metricsMiddleware } from "./middleware/metrics";
 
 const app = express();
 
@@ -21,11 +23,17 @@ const apolloServer = new ApolloServer<BankServiceContext>({
   schema,
 });
 
+app.use(metricsMiddleware);
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", register.contentType);
+  res.end(await register.metrics());
+});
 app.use("/", healthRouter);
 app.use(PinoHttp(logger));
 
 async function startExpressServer() {
   await apolloServer.start();
+
   app.use(
     "/bank",
     express.json(),
